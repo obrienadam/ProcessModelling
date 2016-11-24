@@ -7,12 +7,6 @@ ProcessModel::ProcessModel()
 
 }
 
-ProcessModel::~ProcessModel()
-{
-    for(Component *component: components_)
-        delete component;
-}
-
 bool ProcessModel::addNodeProperty(const std::string &property)
 {
     if(std::find(nodeProperties_.begin(), nodeProperties_.end(), property) != nodeProperties_.end())

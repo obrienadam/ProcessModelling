@@ -10,7 +10,6 @@ class ProcessModel
 {
 public:
     ProcessModel();
-    ~ProcessModel();
 
     bool addNodeProperty(const std::string& property);
     const std::vector<std::string>& properties() const { return nodeProperties_; }
