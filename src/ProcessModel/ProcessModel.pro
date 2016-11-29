@@ -4,12 +4,11 @@
 #
 #-------------------------------------------------
 
-#QT       -= core gui
 QT -= gui
 
 TARGET = ProcessModel
 TEMPLATE = lib
-DESTDIR = ../bin
+DESTDIR = ../../lib
 
 DEFINES += PROCESSMODEL_LIBRARY
 

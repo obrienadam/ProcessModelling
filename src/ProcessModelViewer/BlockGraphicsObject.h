@@ -2,9 +2,10 @@
 #define BLOCKGRAPHICSOBJECT_H
 
 #include <QGraphicsItem>
+#include "processmodelviewer_global.h"
 #include "Block.h"
 
-class BlockGraphicsObject : public QGraphicsItem
+class PROCESSMODELVIEWERSHARED_EXPORT BlockGraphicsObject : public QGraphicsItem
 {
 public:
     BlockGraphicsObject(Block *block);

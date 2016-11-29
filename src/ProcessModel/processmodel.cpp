@@ -15,7 +15,7 @@ ProcessModel::~ProcessModel()
 
 bool ProcessModel::addNodeProperty(const std::string &property)
 {
-
+    return false;
 }
 
 void ProcessModel::addBlock(Block *block)

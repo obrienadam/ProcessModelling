@@ -9,10 +9,10 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = ProcessModelViewer
 TEMPLATE = lib
-DESTDIR = ../bin
+DESTDIR = ../../lib
 
-DEPENDPATH += ../ProcessModel
 INCLUDEPATH += ../ProcessModel
+LIBS += -L../../lib -lProcessModel
 
 DEFINES += PROCESSMODELVIEWER_LIBRARY
 

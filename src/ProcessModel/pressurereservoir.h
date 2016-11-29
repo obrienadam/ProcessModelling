@@ -1,9 +1,10 @@
 #ifndef PRESSURERESERVOIR_H
 #define PRESSURERESERVOIR_H
 
+#include "processmodel_global.h"
 #include "Block.h"
 
-class PressureReservoir : public Block
+class PROCESSMODELSHARED_EXPORT PressureReservoir : public Block
 {
 public:
     PressureReservoir();

@@ -4,23 +4,19 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = app
 TEMPLATE = app
+DESTDIR = ../../bin
 
-DESTDIR = ../bin
+INCLUDEPATH += \
+    ../ProcessModel \
+    ../ProcessModelViewer
 
-DEPENDPATH += ../ProcessModel
-DEPENDPATH += ../ProcessModelViewer
-
-INCLUDEPATH += ../ProcessModel
-INCLUDEPATH += ../ProcessModelViewer
-
-LIBS += -L../bin -lProcessModel
-LIBS += -L../bin -lProcessModelViewer
+LIBS += -L../../lib -lProcessModel -lProcessModelViewer
 
 SOURCES += main.cpp\
         mainwindow.cpp

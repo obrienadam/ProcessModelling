@@ -1,9 +1,10 @@
 #ifndef FAN_H
 #define FAN_H
 
+#include "processmodel_global.h"
 #include "Block.h"
 
-class Fan : public Block
+class PROCESSMODELSHARED_EXPORT Fan : public Block
 {
 public:
     Fan();

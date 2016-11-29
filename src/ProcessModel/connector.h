@@ -1,9 +1,10 @@
 #ifndef CONNECTOR_H
 #define CONNECTOR_H
 
+#include "processmodel_global.h"
 #include "node.h"
 
-class Connector
+class PROCESSMODELSHARED_EXPORT Connector
 {
 public:
     Connector();
