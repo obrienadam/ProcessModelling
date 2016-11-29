@@ -1,9 +1,9 @@
 #ifndef FAN_H
 #define FAN_H
 
-#include "component.h"
+#include "Block.h"
 
-class Fan : public Component
+class Fan : public Block
 {
 public:
     Fan();

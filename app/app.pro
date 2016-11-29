@@ -11,9 +11,16 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = app
 TEMPLATE = app
 
-DEPENDPATH += . ../testLib
+DESTDIR = ../bin
+
+DEPENDPATH += ../ProcessModel
+DEPENDPATH += ../ProcessModelViewer
+
 INCLUDEPATH += ../ProcessModel
-LIBS += -L../ProcessModel/debug -lProcessModel
+INCLUDEPATH += ../ProcessModelViewer
+
+LIBS += -L../bin -lProcessModel
+LIBS += -L../bin -lProcessModelViewer
 
 SOURCES += main.cpp\
         mainwindow.cpp

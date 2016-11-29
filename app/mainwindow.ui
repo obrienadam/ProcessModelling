@@ -14,23 +14,26 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout_2">
-    <item row="0" column="0">
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QTabWidget" name="tabWidget">
+       <widget class="QTabWidget" name="modelTabWidget">
         <property name="currentIndex">
          <number>0</number>
         </property>
-        <widget class="QWidget" name="tab">
+        <widget class="QWidget" name="modelTab">
          <attribute name="title">
-          <string>Tab 1</string>
+          <string>Model Tab</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout">
           <item row="1" column="0">
            <layout class="QVBoxLayout" name="verticalLayout">
             <item>
              <widget class="QGraphicsView" name="graphicsView">
+              <property name="contextMenuPolicy">
+               <enum>Qt::ActionsContextMenu</enum>
+              </property>
               <property name="frameShape">
                <enum>QFrame::WinPanel</enum>
               </property>
@@ -39,7 +42,7 @@
            </layout>
           </item>
           <item row="0" column="0">
-           <widget class="QLabel" name="label">
+           <widget class="QLabel" name="statusLabel">
             <property name="text">
              <string>No model loaded.</string>
             </property>
@@ -47,9 +50,14 @@
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="tab_2">
+        <widget class="QWidget" name="tabWidgetPage2">
          <attribute name="title">
-          <string>Tab 2</string>
+          <string/>
+         </attribute>
+        </widget>
+        <widget class="QWidget" name="tabWidgetPage3">
+         <attribute name="title">
+          <string/>
          </attribute>
         </widget>
        </widget>
@@ -64,7 +72,7 @@
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>21</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -85,8 +93,8 @@
      <property name="title">
       <string>Views</string>
      </property>
-     <addaction name="actionComponents"/>
-     <addaction name="actionSolver_Output"/>
+     <addaction name="actionConsole"/>
+     <addaction name="actionResults"/>
     </widget>
     <addaction name="actionFull_screen"/>
     <addaction name="menuViews"/>
@@ -104,53 +112,86 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QDockWidget" name="components">
+  <widget class="QDockWidget" name="consoleDockWidget">
    <property name="allowedAreas">
-    <set>Qt::LeftDockWidgetArea</set>
+    <set>Qt::BottomDockWidgetArea|Qt::TopDockWidgetArea</set>
    </property>
    <property name="windowTitle">
-    <string>Components</string>
+    <string>Console</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>1</number>
+    <number>8</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents_8">
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QVBoxLayout" name="verticalLayout_3">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <item>
-        <widget class="QTreeWidget" name="treeWidget">
-         <column>
-          <property name="text">
-           <string>Model Items</string>
-          </property>
-         </column>
-         <item>
-          <property name="text">
-           <string>Components</string>
-          </property>
-          <item>
-           <property name="text">
-            <string>Fan</string>
-           </property>
-           <property name="flags">
-            <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsEnabled</set>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Diffuser</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Nozzle</string>
-           </property>
-          </item>
-         </item>
-        </widget>
+      <widget class="QTextBrowser" name="console"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="resultsTableDockWidget">
+   <property name="windowTitle">
+    <string>Results</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QTableWidget" name="resultsTable">
+       <row>
+        <property name="text">
+         <string>Node 1</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Node 2</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Node 3</string>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>Node 4</string>
+        </property>
+       </row>
+       <column>
+        <property name="text">
+         <string>Pressure</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Flow rate</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Temperature</string>
+        </property>
+       </column>
+       <item row="0" column="0">
+        <property name="text">
+         <string>101325</string>
+        </property>
        </item>
-      </layout>
+       <item row="0" column="1">
+        <property name="text">
+         <string>20</string>
+        </property>
+       </item>
+       <item row="0" column="2">
+        <property name="text">
+         <string>293</string>
+        </property>
+       </item>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -163,20 +204,30 @@
     <string>Ctrl+Shift+F11</string>
    </property>
   </action>
-  <action name="actionComponents">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
+  <action name="actionNew_Component">
    <property name="text">
-    <string>Components</string>
+    <string>New Component</string>
    </property>
   </action>
-  <action name="actionSolver_Output">
+  <action name="actionConsole">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Solver Output</string>
+    <string>Console</string>
+   </property>
+  </action>
+  <action name="actionNew_Sink">
+   <property name="text">
+    <string>New Sink</string>
+   </property>
+  </action>
+  <action name="actionResults">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Results</string>
    </property>
   </action>
  </widget>

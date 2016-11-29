@@ -9,25 +9,24 @@ QT -= gui
 
 TARGET = ProcessModel
 TEMPLATE = lib
+DESTDIR = ../bin
 
 DEFINES += PROCESSMODEL_LIBRARY
 
 SOURCES += processmodel.cpp \
     node.cpp \
-    sink.cpp \
     pressurereservoir.cpp \
-    component.cpp \
     fan.cpp \
-    connector.cpp
+    connector.cpp \
+    Block.cpp
 
 HEADERS += processmodel.h\
         processmodel_global.h \
     node.h \
-    sink.h \
     pressurereservoir.h \
-    component.h \
     fan.h \
-    connector.h
+    connector.h \
+    Block.h
 
 unix {
     target.path = /usr/lib

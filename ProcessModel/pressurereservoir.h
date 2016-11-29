@@ -1,9 +1,9 @@
 #ifndef PRESSURERESERVOIR_H
 #define PRESSURERESERVOIR_H
 
-#include "sink.h"
+#include "Block.h"
 
-class PressureReservoir : public Sink
+class PressureReservoir : public Block
 {
 public:
     PressureReservoir();

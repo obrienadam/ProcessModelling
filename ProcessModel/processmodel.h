@@ -4,23 +4,24 @@
 #include <vector>
 #include <string>
 
-#include "component.h"
+#include "processmodel_global.h"
+#include "Block.h"
 
-class ProcessModel
+class PROCESSMODELSHARED_EXPORT ProcessModel
 {
 public:
     ProcessModel();
+    ~ProcessModel();
 
     bool addNodeProperty(const std::string& property);
     const std::vector<std::string>& properties() const { return nodeProperties_; }
 
-    void addComponent(Component *component);
-    Component& component(int i);
+    void addBlock(Block* block);
 
 private:
 
     std::vector<std::string> nodeProperties_;
-    std::vector<Component*> components_;
+    std::vector<Block*> blocks_;
 };
 
 #endif // PROCESSMODEL_H

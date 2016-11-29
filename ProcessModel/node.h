@@ -20,7 +20,7 @@ public:
 
 private:
 
-    std::vector<double> properties_;
     const Type type_;
+    std::vector<double> properties_;
 };
 #endif // NODE_H

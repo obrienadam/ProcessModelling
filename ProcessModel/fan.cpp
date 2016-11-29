@@ -2,7 +2,7 @@
 
 Fan::Fan()
     :
-      Component(1, 1)
+      Block(1, 1, 0, "Fan", "New Fan")
 {
 
 }
