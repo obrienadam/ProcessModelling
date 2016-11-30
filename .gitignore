@@ -1,3 +1,5 @@
 *Makefile
 bin
 lib
+*.o
+*.pro.user*

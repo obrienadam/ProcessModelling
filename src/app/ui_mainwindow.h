@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.6.1
+** Created by: Qt User Interface Compiler version 5.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -98,7 +98,7 @@ public:
         graphicsView->setContextMenuPolicy(Qt::ActionsContextMenu);
         graphicsView->setFrameShape(QFrame::WinPanel);
         graphicsView->setFrameShadow(QFrame::Sunken);
-        graphicsView->setDragMode(QGraphicsView::ScrollHandDrag);
+        graphicsView->setDragMode(QGraphicsView::NoDrag);
 
         verticalLayout->addWidget(graphicsView);
 
@@ -109,7 +109,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1024, 21));
+        menuBar->setGeometry(QRect(0, 0, 1024, 19));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         menuEdit = new QMenu(menuBar);
@@ -199,7 +199,7 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "Process Modeller", 0));
         actionFull_screen->setText(QApplication::translate("MainWindow", "Full Screen", 0));
         actionFull_screen->setShortcut(QApplication::translate("MainWindow", "Ctrl+Shift+F11", 0));
         actionNew_Component->setText(QApplication::translate("MainWindow", "New Component", 0));

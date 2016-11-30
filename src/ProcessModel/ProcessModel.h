@@ -17,6 +17,9 @@ public:
     const std::vector<std::string>& properties() const { return nodeProperties_; }
 
     void addBlock(Block* block);
+    void deleteBlock(Block* block);
+
+    std::vector<Block*> blocks() { return blocks_; }
 
 private:
 

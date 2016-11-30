@@ -1,11 +1,12 @@
 #ifndef BLOCKGRAPHICSOBJECT_H
 #define BLOCKGRAPHICSOBJECT_H
 
-#include <QGraphicsItem>
+#include <QGraphicsRectItem>
 #include "processmodelviewer_global.h"
 #include "Block.h"
+#include "NodeGraphicsObject.h"
 
-class PROCESSMODELVIEWERSHARED_EXPORT BlockGraphicsObject : public QGraphicsItem
+class PROCESSMODELVIEWERSHARED_EXPORT BlockGraphicsObject : public QGraphicsRectItem
 {
 public:
     BlockGraphicsObject(Block *block);
@@ -13,12 +14,9 @@ public:
 
     Block* block() { return block_; }
 
-    QRectF boundingRect() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
-private:
-
-    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+protected:
 
     void setNodes();
     void setText();
@@ -27,7 +25,7 @@ private:
     Block *block_;
     QGraphicsTextItem *text_;
 
-    std::vector<QGraphicsEllipseItem*> nodes_;
+    std::vector<NodeGraphicsObject*> nodes_;
 };
 
 #endif // SINKGRAPHICSOBJECT_H

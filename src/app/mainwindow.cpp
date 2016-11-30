@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "fan.h"
-#include "pressurereservoir.h"
+#include "Fan.h"
+#include "PressureReservoir.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->graphicsView->addAction(ui->actionNew_Component);
     ui->graphicsView->addAction(ui->actionNew_Sink);
+    ui->graphicsView->setMouseTracking(true);
 
     consoleLog("Gemini version 0.0 Copyright (C) 2016 Adam Robert O'Brien");
     consoleLog("Initialization completed.");

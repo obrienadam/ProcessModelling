@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include <node.h>
+#include <Node.h>
 
 class Block
 {
@@ -14,6 +14,14 @@ public:
           int nSinks,
           const std::string& type, const std::string& name = "New Block");
     ~Block();
+
+    size_t nInputs() const { return inputs_.size(); }
+    size_t nOutputs() const { return outputs_.size(); }
+    size_t nSinks() const { return sinks_.size(); }
+    size_t nNodes() const { return nodes_.size(); }
+
+    std::vector<Node*>::iterator begin() { return nodes_.begin(); }
+    std::vector<Node*>::iterator end() { return nodes_.end(); }
 
     const std::string type;
     std::string name;

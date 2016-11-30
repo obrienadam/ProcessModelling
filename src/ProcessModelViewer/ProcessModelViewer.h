@@ -4,7 +4,7 @@
 #include <QGraphicsScene>
 
 #include "processmodelviewer_global.h"
-#include "processmodel.h"
+#include "ProcessModel.h"
 #include "BlockGraphicsObject.h"
 
 class PROCESSMODELVIEWERSHARED_EXPORT ProcessModelViewer : public QGraphicsScene
@@ -18,6 +18,9 @@ public:
     void addBlock(BlockGraphicsObject* block);
 
 private:
+
+    void keyPressEvent(QKeyEvent *event) override;
+    void deleteBlock(BlockGraphicsObject *block);
 
     ProcessModel processModel_;
     std::vector<BlockGraphicsObject*> blocks_;

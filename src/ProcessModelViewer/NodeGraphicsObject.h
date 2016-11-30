@@ -1,18 +1,26 @@
 #ifndef NODEGRAPHICSOBJECT_H
 #define NODEGRAPHICSOBJECT_H
 
-#include <QGraphicsItem>
+#include <QGraphicsEllipseItem>
 
-#include "node.h"
-#include "BlockGraphicsObject.h"
+#include "Node.h"
+#include "ConnectorGraphicsPathObject.h"
 
-class NodeGraphicsObject : public QGraphicsItem
+class NodeGraphicsObject : public QGraphicsEllipseItem
 {
 public:
-    NodeGraphicsObject(Node* node, BlockGraphicsObject* block);
+    NodeGraphicsObject(Node* node, QGraphicsItem* parent);
 
 private:
+
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+
+    ConnectorGraphicsPathObject* checkForConnection(QPointF point);
+
     Node* node_;
+    ConnectorGraphicsPathObject *tmpPath_ = nullptr;
 };
 
 #endif // NODEGRAPHICSOBJECT_H

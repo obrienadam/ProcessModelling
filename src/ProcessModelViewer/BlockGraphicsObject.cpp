@@ -1,11 +1,21 @@
 #include <QPainter>
 #include <QTextDocument>
+#include <QGraphicsSceneMouseEvent>
+#include <QStyleOptionGraphicsItem>
+#include <QDebug>
 
 #include "BlockGraphicsObject.h"
 
 BlockGraphicsObject::BlockGraphicsObject(Block *block)
+    :
+      QGraphicsRectItem(0, 0, 50, 50)
 {
     setFlags(ItemIsMovable|ItemIsSelectable);
+    setAcceptedMouseButtons(Qt::LeftButton);
+
+    setPen(QPen(Qt::black, 2));
+    setBrush(QBrush(Qt::white));
+
     block_ = block;
     setNodes();
     setText();
@@ -18,38 +28,28 @@ BlockGraphicsObject::~BlockGraphicsObject()
         delete node;
 }
 
-QRectF BlockGraphicsObject::boundingRect() const
-{
-    return QRectF(0, 0, 50, 50);
-}
-
 void BlockGraphicsObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    QPen pen(Qt::black, 2);
-    QBrush brush(Qt::white);
-
-    painter->setPen(pen);
-    painter->setBrush(brush);
-    painter->drawRect(boundingRect());
-
     if(text_->document()->isModified())
     {
-        setTextPosition();
         block_->name = text_->toPlainText().toStdString();
+        setTextPosition();
+        qDebug() << "Repositioned text.";
     }
-}
 
-void BlockGraphicsObject::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
-{
-
+    QGraphicsRectItem::paint(painter, option, widget);
 }
 
 void BlockGraphicsObject::setNodes()
-{
-    QGraphicsEllipseItem *node = new QGraphicsEllipseItem(50, 20, 10, 10, this);
-    node->setPen(QPen(Qt::black, 2));
-    node->setBrush(QBrush(Qt::blue));
-    nodes_.push_back(node);
+{   
+    QPointF points[] = {QPointF(-10, 20), QPointF(50, 20), QPointF(20, 50), QPointF(20, -10)};
+    int n = 0;
+
+    for(Node* node: *block())
+    {
+        nodes_.push_back(new NodeGraphicsObject(node, this));
+        nodes_.back()->setPos(points[n++]);
+    }
 }
 
 void BlockGraphicsObject::setText()
@@ -57,16 +57,15 @@ void BlockGraphicsObject::setText()
     text_ = new QGraphicsTextItem(this);
     text_->setPlainText(block_->name.c_str());
     text_->setTextInteractionFlags(Qt::TextEditable|Qt::TextSelectableByKeyboard);
+    text_->setFlag(QGraphicsItem::ItemIgnoresTransformations);
     setTextPosition();
 }
 
 void BlockGraphicsObject::setTextPosition()
 {
-    qreal centerText = text_->boundingRect().center().x();
-    qreal centerComp = boundingRect().center().x();
-
+    qreal textHalfWidth = text_->boundingRect().width()/2.;
     text_->setPos(
-                centerComp - centerText,
-                50
+                boundingRect().center().x() - textHalfWidth,
+                50.
                 );
 }

@@ -19,13 +19,15 @@ DEFINES += PROCESSMODELVIEWER_LIBRARY
 SOURCES += \
     ProcessModelViewer.cpp \
     BlockGraphicsObject.cpp \
-    NodeGraphicsObject.cpp
+    NodeGraphicsObject.cpp \
+    ConnectorGraphicsPathObject.cpp
 
 HEADERS +=\
         processmodelviewer_global.h \
     ProcessModelViewer.h \
     BlockGraphicsObject.h \
-    NodeGraphicsObject.h
+    NodeGraphicsObject.h \
+    ConnectorGraphicsPathObject.h
 
 unix {
     target.path = /usr/lib

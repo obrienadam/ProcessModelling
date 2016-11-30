@@ -12,20 +12,24 @@ DESTDIR = ../../lib
 
 DEFINES += PROCESSMODEL_LIBRARY
 
-SOURCES += processmodel.cpp \
-    node.cpp \
-    pressurereservoir.cpp \
-    fan.cpp \
-    connector.cpp \
-    Block.cpp
+SOURCES += \
+    Block.cpp \
+    Node.cpp \
+    Fan.cpp \
+    ProcessModel.cpp \
+    PressureReservoir.cpp \
+    Connector.cpp \
+    Solver.cpp
 
-HEADERS += processmodel.h\
+HEADERS +=\
         processmodel_global.h \
-    node.h \
-    pressurereservoir.h \
-    fan.h \
-    connector.h \
-    Block.h
+    Block.h \
+    Node.h \
+    Fan.h \
+    PressureReservoir.h \
+    ProcessModel.h \
+    Connector.h \
+    Solver.h
 
 unix {
     target.path = /usr/lib

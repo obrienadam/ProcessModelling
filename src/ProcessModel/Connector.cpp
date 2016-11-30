@@ -1,4 +1,4 @@
-#include "connector.h"
+#include "Connector.h"
 
 Connector::Connector()
     :
@@ -10,7 +10,10 @@ Connector::Connector()
 
 bool Connector::canConnect(const Node &sourceNode, const Node &destNode) const
 {
-    return (sourceNode.isSink() && destNode.isInput()) || (sourceNode.isOutput() && destNode.isInput());
+    return (sourceNode.isSink() && destNode.isInput())
+            || (sourceNode.isOutput() && destNode.isInput())
+            || (sourceNode.isOutput() && destNode.isSink())
+            || (sourceNode.isSink() && destNode.isSink());
 }
 
 bool Connector::connect(Node &sourceNode, Node &destNode)

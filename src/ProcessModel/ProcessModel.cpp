@@ -1,6 +1,6 @@
 #include <algorithm>
 
-#include "processmodel.h"
+#include "ProcessModel.h"
 
 ProcessModel::ProcessModel()
 {
@@ -21,4 +21,10 @@ bool ProcessModel::addNodeProperty(const std::string &property)
 void ProcessModel::addBlock(Block *block)
 {
     blocks_.push_back(block);
+}
+
+void ProcessModel::deleteBlock(Block *block)
+{
+    blocks_.erase(std::find(blocks_.begin(), blocks_.end(), block));
+    delete block;
 }

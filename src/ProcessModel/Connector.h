@@ -2,7 +2,7 @@
 #define CONNECTOR_H
 
 #include "processmodel_global.h"
-#include "node.h"
+#include "Node.h"
 
 class PROCESSMODELSHARED_EXPORT Connector
 {
