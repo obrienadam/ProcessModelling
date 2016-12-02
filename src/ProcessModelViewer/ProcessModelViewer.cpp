@@ -30,8 +30,16 @@ void ProcessModelViewer::keyPressEvent(QKeyEvent *event)
     {
     case Qt::Key_Delete:
         for(QGraphicsItem* item: this->selectedItems())
-            removeItem((BlockGraphicsObject*)item);
-        qDebug() << "Block removed.";
+            switch(item->type())
+            {
+            case BlockGraphicsObject::Type:
+                deleteBlock((BlockGraphicsObject*)item);
+                break;
+            case ConnectorGraphicsPathObject::Type:
+                deleteConnector((ConnectorGraphicsPathObject*)item);
+                break;
+            }
+
         break;
 
     case Qt::Key_Left:
@@ -56,6 +64,18 @@ void ProcessModelViewer::deleteBlock(BlockGraphicsObject *block)
     this->removeItem(block);
     blocks_.erase(std::find(blocks_.begin(), blocks_.end(), block));
 
+    qDebug() << "Deleted block \"" << block->block()->name.c_str() << "\".";
     processModel_.deleteBlock(block->block());
     delete block;
+}
+
+void ProcessModelViewer::deleteConnector(ConnectorGraphicsPathObject *connector)
+{
+    this->removeItem(connector);
+
+    connector->sourceNode()->removeConnection();
+    connector->destNode()->removeConnection();
+
+    qDebug() << "Deleted a connector.";
+    delete connector;
 }

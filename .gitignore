@@ -3,3 +3,4 @@ bin
 lib
 *.o
 *.pro.user*
+*.stash

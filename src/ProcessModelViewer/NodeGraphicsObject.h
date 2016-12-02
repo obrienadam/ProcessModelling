@@ -9,18 +9,30 @@
 class NodeGraphicsObject : public QGraphicsEllipseItem
 {
 public:
+
+    enum {Type = UserType + 3};
+
     NodeGraphicsObject(Node* node, QGraphicsItem* parent);
+    ~NodeGraphicsObject();
+
+    int type() const override { return Type; }
+
+    void removeConnection();
+
+    Node* node() { return node_; }
 
 private:
 
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
     ConnectorGraphicsPathObject* checkForConnection(QPointF point);
 
     Node* node_;
-    ConnectorGraphicsPathObject *tmpPath_ = nullptr;
+    ConnectorGraphicsPathObject *connector_ = nullptr;
 };
 
 #endif // NODEGRAPHICSOBJECT_H

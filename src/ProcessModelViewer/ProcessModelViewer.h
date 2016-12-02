@@ -21,6 +21,7 @@ private:
 
     void keyPressEvent(QKeyEvent *event) override;
     void deleteBlock(BlockGraphicsObject *block);
+    void deleteConnector(ConnectorGraphicsPathObject *connector);
 
     ProcessModel processModel_;
     std::vector<BlockGraphicsObject*> blocks_;

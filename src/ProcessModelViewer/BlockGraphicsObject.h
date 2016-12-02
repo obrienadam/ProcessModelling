@@ -9,11 +9,15 @@
 class PROCESSMODELVIEWERSHARED_EXPORT BlockGraphicsObject : public QGraphicsRectItem
 {
 public:
+
+    enum {Type = UserType + 1};
+
+    int type() const { return Type; }
+
     BlockGraphicsObject(Block *block);
     ~BlockGraphicsObject();
 
     Block* block() { return block_; }
-
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
 protected:

@@ -16,13 +16,13 @@ bool Connector::canConnect(const Node &sourceNode, const Node &destNode) const
             || (sourceNode.isSink() && destNode.isSink());
 }
 
-bool Connector::connect(Node &sourceNode, Node &destNode)
+bool Connector::connect(Node *sourceNode, Node *destNode)
 {
-    if(!canConnect(sourceNode, destNode))
+    if(!canConnect(*sourceNode, *destNode))
         return false;
 
-    sourceNode_ = &sourceNode;
-    destNode_ = &destNode;
+    sourceNode_ = sourceNode;
+    destNode_ = destNode;
 
     return true;
 }

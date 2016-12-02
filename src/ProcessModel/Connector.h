@@ -9,11 +9,15 @@ class PROCESSMODELSHARED_EXPORT Connector
 public:
     Connector();
 
+    bool isSourceNode(Node* node) const { return node == sourceNode_ ; }
+
     bool canConnect(const Node& sourceNode, const Node& destNode) const;
-    bool connect(Node& sourceNode, Node& destNode);
+    bool isConnected() const { return sourceNode_ != nullptr && destNode_ != nullptr; }
+
+    bool connect(Node* sourceNode, Node* destNode);
 
 private:
-    Node *sourceNode_, *destNode_;
+    Node *sourceNode_ = nullptr, *destNode_ = nullptr;
 };
 
 #endif // CONNECTOR_H

@@ -13,9 +13,20 @@ NodeGraphicsObject::NodeGraphicsObject(Node *node, QGraphicsItem *parent)
       QGraphicsEllipseItem(0, 0, 10, 10, parent),
       node_(node)
 {
+    setFlags(ItemSendsScenePositionChanges);
     setPen(QPen(Qt::black, 2));
     setBrush(QBrush(Qt::blue));
     setAcceptedMouseButtons(Qt::LeftButton);
+}
+
+NodeGraphicsObject::~NodeGraphicsObject()
+{
+
+}
+
+void NodeGraphicsObject::removeConnection()
+{
+    connector_ = nullptr;
 }
 
 void NodeGraphicsObject::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -23,10 +34,12 @@ void NodeGraphicsObject::mousePressEvent(QGraphicsSceneMouseEvent *event)
     switch(event->button())
     {
     case Qt::LeftButton:
-        tmpPath_ = new ConnectorGraphicsPathObject();
-        scene()->addItem(tmpPath_);
-        event->accept();
-
+        if(connector_ == nullptr)
+        {
+            connector_ = new ConnectorGraphicsPathObject();
+            scene()->addItem(connector_);
+            event->accept();
+        }
         break;
     default:
         break;
@@ -37,7 +50,8 @@ void NodeGraphicsObject::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void NodeGraphicsObject::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    tmpPath_->setPath(this, mapToScene(event->pos()));
+    if(!connector_->connector()->isConnected())
+        connector_->setPath(this, mapToScene(event->pos()));
     //event->accept();
 }
 
@@ -47,30 +61,40 @@ void NodeGraphicsObject::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     qDebug() << "Pos = " << event->pos();
     qDebug() << "Node scene pos: " << this->mapToScene(event->pos());
 
-    scene()->removeItem(tmpPath_);
-    delete tmpPath_;
-    tmpPath_ = nullptr;
+    if(!connector_->connector()->isConnected())
+        checkForConnection(mapToScene(event->pos()));
+}
 
-    checkForConnection(mapToScene(event->pos()));
+QVariant NodeGraphicsObject::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
+{
+    if(change == ItemScenePositionHasChanged)
+    {
+        qDebug() << "Called" << connector_;
+        if(connector_)
+            connector_->setPath();
+    }
+
+    return QGraphicsEllipseItem::itemChange(change, value);
 }
 
 ConnectorGraphicsPathObject *NodeGraphicsObject::checkForConnection(QPointF point)
 {
-    NodeGraphicsObject *item = (NodeGraphicsObject*)scene()->itemAt(point, transform());
-    qDebug() << item;
+    NodeGraphicsObject* destNode = nullptr;
+    for(QGraphicsItem* item: scene()->items(point))
+        if(item->type() == NodeGraphicsObject::Type)
+        {
+            destNode = (NodeGraphicsObject*)item;
+            break;
+        }
 
-    if(item == nullptr)
-        return nullptr;
-
-    Connector connector;
-    if(connector.connect(*(this->node_), *(item->node_)))
+    if(destNode && !destNode->connector_ && connector_->connect(this, destNode))
     {
-        ConnectorGraphicsPathObject *cp = new ConnectorGraphicsPathObject();
-        cp->connectNodes(this, item);
-        scene()->addItem(cp);
+        destNode->connector_ = connector_;
     }
     else
     {
-        qDebug() << "Nodes could not be connected.";
+        scene()->removeItem(connector_);
+        delete connector_;
+        connector_ = nullptr;
     }
 }

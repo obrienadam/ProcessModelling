@@ -10,7 +10,7 @@ BlockGraphicsObject::BlockGraphicsObject(Block *block)
     :
       QGraphicsRectItem(0, 0, 50, 50)
 {
-    setFlags(ItemIsMovable|ItemIsSelectable);
+    setFlags(ItemIsMovable|ItemIsSelectable|ItemSendsGeometryChanges);
     setAcceptedMouseButtons(Qt::LeftButton);
 
     setPen(QPen(Qt::black, 2));
