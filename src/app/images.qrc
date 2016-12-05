@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/blocks">
+        <file>images/fan.png</file>
+        <file>images/default.png</file>
+        <file>images/pressure_reservoir.png</file>
+        <file>images/t_connector.png</file>
+        <file>images/y_splitter.png</file>
+    </qresource>
+    <qresource prefix="/icons"/>
+</RCC>

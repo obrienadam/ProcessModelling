@@ -1,26 +1,12 @@
 #include "Node.h"
+#include "Block.h"
+#include "Connector.h"
 
-Node::Node(Type type)
-    :
-      type_(type)
-{
-
-}
-
-Node::Node(Type type, int nProperties)
+Node::Node(Type type, Block *block, Connector *connector)
     :
       type_(type),
-      properties_(nProperties)
+      block_(block),
+      connector_(connector)
 {
 
-}
-
-void Node::addProperty()
-{
-    properties_.push_back(0.);
-}
-
-void Node::removeProperty(int i)
-{
-    properties_.erase(properties_.begin() + i);
 }

@@ -1,22 +1,41 @@
 #ifndef SOLVER_H
 #define SOLVER_H
 
+#include <vector>
 #include <map>
 
 #include "processmodel_global.h"
-#include "ProcessModel.h"
+#include "Block.h"
+#include "Connector.h"
+#include "Matrix.h"
 
 class PROCESSMODELSHARED_EXPORT Solver
 {
 public:
     Solver();
-    bool solve(ProcessModel& pm);
 
-    void  constructMaps(ProcessModel &pm);
+    bool solve(
+            std::vector<Block*>& blocks,
+            std::vector<Connector*>& connectors,
+            bool useCachedMaps = false
+            );
+
+    const std::vector<const Node*>& nodes() const { return indexToNodeMap_; }
+
+    Matrix matrix;
 
 private:
-    std::map<Node*, int> nodeToIndexMap_;
-    std::vector<Node*> indexToNodeMap_;
+
+    void constructMaps(std::vector<Block*>& blocks, std::vector<Connector *> &connectors);
+    void constructMatrix();
+    void mapSolutionToModel();
+
+    std::map<const Node*, int> nodeToIndexMap_;
+    std::vector<const Node*> indexToNodeMap_;
+
+    //- Property names
+    std::vector<std::string> nodePropertyNames_;
+    std::vector<std::string> connectorPropertyNames_;
 };
 
 #endif // SOLVER_H

@@ -11,15 +11,18 @@ TEMPLATE = lib
 DESTDIR = ../../lib
 
 DEFINES += PROCESSMODEL_LIBRARY
+LIBS += -larmadillo
 
 SOURCES += \
     Block.cpp \
     Node.cpp \
     Fan.cpp \
-    ProcessModel.cpp \
     PressureReservoir.cpp \
     Connector.cpp \
-    Solver.cpp
+    Solver.cpp \
+    Equation.cpp \
+    Matrix.cpp \
+    TJunction.cpp
 
 HEADERS +=\
         processmodel_global.h \
@@ -27,9 +30,11 @@ HEADERS +=\
     Node.h \
     Fan.h \
     PressureReservoir.h \
-    ProcessModel.h \
     Connector.h \
-    Solver.h
+    Solver.h \
+    Equation.h \
+    Matrix.h \
+    TJunction.h
 
 unix {
     target.path = /usr/lib

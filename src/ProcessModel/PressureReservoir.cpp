@@ -2,7 +2,7 @@
 
 PressureReservoir::PressureReservoir()
     :
-      Block(0, 0, 1, "Pressure Reservoir", "ATM")
+      Block(0, 0, 1, "Pressure Reservoir", "Patm")
 {
 
 }

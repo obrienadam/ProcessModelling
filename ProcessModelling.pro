@@ -2,9 +2,9 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     src/ProcessModel \
-    src/ProcessModelViewer \
+    src/ProcessModelScene \
     src/app
 
-app.depends = ProcessModel ProcessModelViewer
+app.depends = ProcessModel ProcessModelScene
 
 CONFIG += ordered

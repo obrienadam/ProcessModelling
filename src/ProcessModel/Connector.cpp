@@ -8,6 +8,11 @@ Connector::Connector()
 
 }
 
+Connector::~Connector()
+{
+    disconnect();
+}
+
 bool Connector::canConnect(const Node &sourceNode, const Node &destNode) const
 {
     return (sourceNode.isSink() && destNode.isInput())
@@ -16,7 +21,7 @@ bool Connector::canConnect(const Node &sourceNode, const Node &destNode) const
             || (sourceNode.isSink() && destNode.isSink());
 }
 
-bool Connector::connect(Node *sourceNode, Node *destNode)
+bool Connector::connect(Node* sourceNode, Node* destNode)
 {
     if(!canConnect(*sourceNode, *destNode))
         return false;
@@ -25,4 +30,15 @@ bool Connector::connect(Node *sourceNode, Node *destNode)
     destNode_ = destNode;
 
     return true;
+}
+
+void Connector::disconnect()
+{
+    if(isConnected())
+    {
+        sourceNode_->removeConnector();
+        destNode_->removeConnector();
+        sourceNode_ = nullptr;
+        destNode_ = nullptr;
+    }
 }

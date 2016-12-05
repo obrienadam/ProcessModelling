@@ -14,13 +14,21 @@ DESTDIR = ../../bin
 
 INCLUDEPATH += \
     ../ProcessModel \
-    ../ProcessModelViewer
+    ../ProcessModelScene
 
-LIBS += -L../../lib -lProcessModel -lProcessModelViewer
+LIBS += -L../../lib -lProcessModel -lProcessModelScene
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+    BlockDialog.cpp \
+    MainWindow.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += \
+    BlockDialog.h \
+    MainWindow.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    node_dialog.ui \
+    blockdialog.ui
+
+RESOURCES += \
+    images.qrc

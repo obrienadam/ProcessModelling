@@ -15,6 +15,7 @@
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QDockWidget>
 #include <QtWidgets/QGraphicsView>
+#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QMainWindow>
@@ -25,6 +26,7 @@
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QToolBar>
+#include <QtWidgets/QTreeView>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -34,10 +36,11 @@ class Ui_MainWindow
 {
 public:
     QAction *actionFull_screen;
-    QAction *actionNew_Component;
     QAction *actionConsole;
-    QAction *actionNew_Sink;
     QAction *actionResults;
+    QAction *actionSolver_Settings;
+    QAction *actionRunSolver;
+    QAction *actionNew_Block;
     QWidget *centralWidget;
     QHBoxLayout *horizontalLayout_2;
     QTabWidget *modelTabWidget;
@@ -59,6 +62,10 @@ public:
     QWidget *dockWidgetContents_2;
     QVBoxLayout *verticalLayout_2;
     QTableWidget *resultsTable;
+    QDockWidget *solverSettingsDockWidget;
+    QWidget *dockWidgetContents_4;
+    QGridLayout *gridLayout;
+    QTreeView *solverSettingsTree;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -67,16 +74,19 @@ public:
         MainWindow->resize(1024, 768);
         actionFull_screen = new QAction(MainWindow);
         actionFull_screen->setObjectName(QStringLiteral("actionFull_screen"));
-        actionNew_Component = new QAction(MainWindow);
-        actionNew_Component->setObjectName(QStringLiteral("actionNew_Component"));
         actionConsole = new QAction(MainWindow);
         actionConsole->setObjectName(QStringLiteral("actionConsole"));
         actionConsole->setCheckable(true);
-        actionNew_Sink = new QAction(MainWindow);
-        actionNew_Sink->setObjectName(QStringLiteral("actionNew_Sink"));
         actionResults = new QAction(MainWindow);
         actionResults->setObjectName(QStringLiteral("actionResults"));
         actionResults->setCheckable(true);
+        actionSolver_Settings = new QAction(MainWindow);
+        actionSolver_Settings->setObjectName(QStringLiteral("actionSolver_Settings"));
+        actionSolver_Settings->setCheckable(true);
+        actionRunSolver = new QAction(MainWindow);
+        actionRunSolver->setObjectName(QStringLiteral("actionRunSolver"));
+        actionNew_Block = new QAction(MainWindow);
+        actionNew_Block->setObjectName(QStringLiteral("actionNew_Block"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         horizontalLayout_2 = new QHBoxLayout(centralWidget);
@@ -158,28 +168,28 @@ public:
         resultsTable->setHorizontalHeaderItem(1, __qtablewidgetitem1);
         QTableWidgetItem *__qtablewidgetitem2 = new QTableWidgetItem();
         resultsTable->setHorizontalHeaderItem(2, __qtablewidgetitem2);
-        if (resultsTable->rowCount() < 4)
-            resultsTable->setRowCount(4);
-        QTableWidgetItem *__qtablewidgetitem3 = new QTableWidgetItem();
-        resultsTable->setVerticalHeaderItem(0, __qtablewidgetitem3);
-        QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
-        resultsTable->setVerticalHeaderItem(1, __qtablewidgetitem4);
-        QTableWidgetItem *__qtablewidgetitem5 = new QTableWidgetItem();
-        resultsTable->setVerticalHeaderItem(2, __qtablewidgetitem5);
-        QTableWidgetItem *__qtablewidgetitem6 = new QTableWidgetItem();
-        resultsTable->setVerticalHeaderItem(3, __qtablewidgetitem6);
-        QTableWidgetItem *__qtablewidgetitem7 = new QTableWidgetItem();
-        resultsTable->setItem(0, 0, __qtablewidgetitem7);
-        QTableWidgetItem *__qtablewidgetitem8 = new QTableWidgetItem();
-        resultsTable->setItem(0, 1, __qtablewidgetitem8);
-        QTableWidgetItem *__qtablewidgetitem9 = new QTableWidgetItem();
-        resultsTable->setItem(0, 2, __qtablewidgetitem9);
         resultsTable->setObjectName(QStringLiteral("resultsTable"));
+        resultsTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
         verticalLayout_2->addWidget(resultsTable);
 
         resultsTableDockWidget->setWidget(dockWidgetContents_2);
         MainWindow->addDockWidget(static_cast<Qt::DockWidgetArea>(8), resultsTableDockWidget);
+        solverSettingsDockWidget = new QDockWidget(MainWindow);
+        solverSettingsDockWidget->setObjectName(QStringLiteral("solverSettingsDockWidget"));
+        dockWidgetContents_4 = new QWidget();
+        dockWidgetContents_4->setObjectName(QStringLiteral("dockWidgetContents_4"));
+        gridLayout = new QGridLayout(dockWidgetContents_4);
+        gridLayout->setSpacing(6);
+        gridLayout->setContentsMargins(11, 11, 11, 11);
+        gridLayout->setObjectName(QStringLiteral("gridLayout"));
+        solverSettingsTree = new QTreeView(dockWidgetContents_4);
+        solverSettingsTree->setObjectName(QStringLiteral("solverSettingsTree"));
+
+        gridLayout->addWidget(solverSettingsTree, 1, 0, 1, 1);
+
+        solverSettingsDockWidget->setWidget(dockWidgetContents_4);
+        MainWindow->addDockWidget(static_cast<Qt::DockWidgetArea>(1), solverSettingsDockWidget);
 
         menuBar->addAction(menuFile->menuAction());
         menuBar->addAction(menuEdit->menuAction());
@@ -188,6 +198,8 @@ public:
         menuWindow->addAction(menuViews->menuAction());
         menuViews->addAction(actionConsole);
         menuViews->addAction(actionResults);
+        menuViews->addAction(actionSolver_Settings);
+        mainToolBar->addAction(actionRunSolver);
 
         retranslateUi(MainWindow);
 
@@ -202,10 +214,17 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "Process Modeller", 0));
         actionFull_screen->setText(QApplication::translate("MainWindow", "Full Screen", 0));
         actionFull_screen->setShortcut(QApplication::translate("MainWindow", "Ctrl+Shift+F11", 0));
-        actionNew_Component->setText(QApplication::translate("MainWindow", "New Component", 0));
         actionConsole->setText(QApplication::translate("MainWindow", "Console", 0));
-        actionNew_Sink->setText(QApplication::translate("MainWindow", "New Sink", 0));
         actionResults->setText(QApplication::translate("MainWindow", "Results", 0));
+        actionSolver_Settings->setText(QApplication::translate("MainWindow", "Solver Settings", 0));
+        actionRunSolver->setText(QApplication::translate("MainWindow", "Run Solver", 0));
+#ifndef QT_NO_TOOLTIP
+        actionRunSolver->setToolTip(QApplication::translate("MainWindow", "Run Solver", 0));
+#endif // QT_NO_TOOLTIP
+        actionNew_Block->setText(QApplication::translate("MainWindow", "New Block", 0));
+#ifndef QT_NO_TOOLTIP
+        actionNew_Block->setToolTip(QApplication::translate("MainWindow", "Create a new block", 0));
+#endif // QT_NO_TOOLTIP
         modelTabWidget->setTabText(modelTabWidget->indexOf(modelTab), QApplication::translate("MainWindow", "New Model*", 0));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
         menuEdit->setTitle(QApplication::translate("MainWindow", "Edit", 0));
@@ -214,30 +233,12 @@ public:
         consoleDockWidget->setWindowTitle(QApplication::translate("MainWindow", "Console", 0));
         resultsTableDockWidget->setWindowTitle(QApplication::translate("MainWindow", "Results", 0));
         QTableWidgetItem *___qtablewidgetitem = resultsTable->horizontalHeaderItem(0);
-        ___qtablewidgetitem->setText(QApplication::translate("MainWindow", "Pressure", 0));
+        ___qtablewidgetitem->setText(QApplication::translate("MainWindow", "Node ID", 0));
         QTableWidgetItem *___qtablewidgetitem1 = resultsTable->horizontalHeaderItem(1);
-        ___qtablewidgetitem1->setText(QApplication::translate("MainWindow", "Flow rate", 0));
+        ___qtablewidgetitem1->setText(QApplication::translate("MainWindow", "Parent Block", 0));
         QTableWidgetItem *___qtablewidgetitem2 = resultsTable->horizontalHeaderItem(2);
-        ___qtablewidgetitem2->setText(QApplication::translate("MainWindow", "Temperature", 0));
-        QTableWidgetItem *___qtablewidgetitem3 = resultsTable->verticalHeaderItem(0);
-        ___qtablewidgetitem3->setText(QApplication::translate("MainWindow", "Node 1", 0));
-        QTableWidgetItem *___qtablewidgetitem4 = resultsTable->verticalHeaderItem(1);
-        ___qtablewidgetitem4->setText(QApplication::translate("MainWindow", "Node 2", 0));
-        QTableWidgetItem *___qtablewidgetitem5 = resultsTable->verticalHeaderItem(2);
-        ___qtablewidgetitem5->setText(QApplication::translate("MainWindow", "Node 3", 0));
-        QTableWidgetItem *___qtablewidgetitem6 = resultsTable->verticalHeaderItem(3);
-        ___qtablewidgetitem6->setText(QApplication::translate("MainWindow", "Node 4", 0));
-
-        const bool __sortingEnabled = resultsTable->isSortingEnabled();
-        resultsTable->setSortingEnabled(false);
-        QTableWidgetItem *___qtablewidgetitem7 = resultsTable->item(0, 0);
-        ___qtablewidgetitem7->setText(QApplication::translate("MainWindow", "101325", 0));
-        QTableWidgetItem *___qtablewidgetitem8 = resultsTable->item(0, 1);
-        ___qtablewidgetitem8->setText(QApplication::translate("MainWindow", "20", 0));
-        QTableWidgetItem *___qtablewidgetitem9 = resultsTable->item(0, 2);
-        ___qtablewidgetitem9->setText(QApplication::translate("MainWindow", "293", 0));
-        resultsTable->setSortingEnabled(__sortingEnabled);
-
+        ___qtablewidgetitem2->setText(QApplication::translate("MainWindow", "Parent Block Type", 0));
+        solverSettingsDockWidget->setWindowTitle(QApplication::translate("MainWindow", "Solver settings", 0));
     } // retranslateUi
 
 };

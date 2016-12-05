@@ -1,41 +1,31 @@
 #include "Block.h"
 
-Block::Block(const std::string &type, const std::string &name)
+Block::Block(int nInputs, int nOutputs, int nSinks, const std::string &type, const std::string &name)
     :
       type(type),
       name(name)
 {
-
-}
-
-Block::Block(int nInputs, int nOutputs, int nSinks, const std::string &type, const std::string &name)
-    :
-      Block(type, name)
-{
     for(int i = 0; i < nInputs; ++i)
     {
-        Node* node = new Node(Node::INPUT);
-        inputs_.push_back(node);
-        nodes_.push_back(node);
+        inputs_.push_back(std::make_shared<Node>(Node::INPUT, this));
+        nodes_.push_back(inputs_.back());
     }
 
     for(int i = 0; i < nOutputs; ++i)
     {
-        Node* node = new Node(Node::OUTPUT);
-        outputs_.push_back(node);
-        nodes_.push_back(node);
+        outputs_.push_back(std::make_shared<Node>(Node::OUTPUT, this));
+        nodes_.push_back(outputs_.back());
     }
 
     for(int i = 0; i < nSinks; ++i)
     {
-        Node* node = new Node(Node::SINK);
-        sinks_.push_back(node);
-        nodes_.push_back(node);
+        sinks_.push_back(std::make_shared<Node>(Node::SINK, this));
+        nodes_.push_back(sinks_.back());
     }
 }
 
 Block::~Block()
 {
-    for(Node* node: nodes_)
-        delete node;
+    for(auto &node: nodes_)
+        node->removeBlock();
 }
