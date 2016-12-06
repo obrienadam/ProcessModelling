@@ -13,20 +13,22 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QComboBox>
 #include <QtWidgets/QDockWidget>
+#include <QtWidgets/QFormLayout>
 #include <QtWidgets/QGraphicsView>
-#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QToolBar>
-#include <QtWidgets/QTreeView>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -38,7 +40,6 @@ public:
     QAction *actionFull_screen;
     QAction *actionConsole;
     QAction *actionResults;
-    QAction *actionSolver_Settings;
     QAction *actionRunSolver;
     QAction *actionNew_Block;
     QWidget *centralWidget;
@@ -46,6 +47,11 @@ public:
     QTabWidget *modelTabWidget;
     QWidget *modelTab;
     QVBoxLayout *verticalLayout;
+    QFormLayout *formLayout;
+    QLabel *label;
+    QHBoxLayout *horizontalLayout_4;
+    QComboBox *modelComboBox;
+    QSpacerItem *horizontalSpacer;
     QGraphicsView *graphicsView;
     QMenuBar *menuBar;
     QMenu *menuFile;
@@ -62,10 +68,6 @@ public:
     QWidget *dockWidgetContents_2;
     QVBoxLayout *verticalLayout_2;
     QTableWidget *resultsTable;
-    QDockWidget *solverSettingsDockWidget;
-    QWidget *dockWidgetContents_4;
-    QGridLayout *gridLayout;
-    QTreeView *solverSettingsTree;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -80,9 +82,6 @@ public:
         actionResults = new QAction(MainWindow);
         actionResults->setObjectName(QStringLiteral("actionResults"));
         actionResults->setCheckable(true);
-        actionSolver_Settings = new QAction(MainWindow);
-        actionSolver_Settings->setObjectName(QStringLiteral("actionSolver_Settings"));
-        actionSolver_Settings->setCheckable(true);
         actionRunSolver = new QAction(MainWindow);
         actionRunSolver->setObjectName(QStringLiteral("actionRunSolver"));
         actionNew_Block = new QAction(MainWindow);
@@ -103,12 +102,37 @@ public:
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        formLayout = new QFormLayout();
+        formLayout->setSpacing(6);
+        formLayout->setObjectName(QStringLiteral("formLayout"));
+        label = new QLabel(modelTab);
+        label->setObjectName(QStringLiteral("label"));
+
+        formLayout->setWidget(0, QFormLayout::LabelRole, label);
+
+        horizontalLayout_4 = new QHBoxLayout();
+        horizontalLayout_4->setSpacing(6);
+        horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
+        modelComboBox = new QComboBox(modelTab);
+        modelComboBox->setObjectName(QStringLiteral("modelComboBox"));
+
+        horizontalLayout_4->addWidget(modelComboBox);
+
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_4->addItem(horizontalSpacer);
+
+
+        formLayout->setLayout(0, QFormLayout::FieldRole, horizontalLayout_4);
+
+
+        verticalLayout->addLayout(formLayout);
+
         graphicsView = new QGraphicsView(modelTab);
         graphicsView->setObjectName(QStringLiteral("graphicsView"));
         graphicsView->setContextMenuPolicy(Qt::ActionsContextMenu);
         graphicsView->setFrameShape(QFrame::WinPanel);
-        graphicsView->setFrameShadow(QFrame::Sunken);
-        graphicsView->setDragMode(QGraphicsView::NoDrag);
+        graphicsView->setRenderHints(QPainter::HighQualityAntialiasing|QPainter::SmoothPixmapTransform|QPainter::TextAntialiasing);
 
         verticalLayout->addWidget(graphicsView);
 
@@ -175,21 +199,6 @@ public:
 
         resultsTableDockWidget->setWidget(dockWidgetContents_2);
         MainWindow->addDockWidget(static_cast<Qt::DockWidgetArea>(8), resultsTableDockWidget);
-        solverSettingsDockWidget = new QDockWidget(MainWindow);
-        solverSettingsDockWidget->setObjectName(QStringLiteral("solverSettingsDockWidget"));
-        dockWidgetContents_4 = new QWidget();
-        dockWidgetContents_4->setObjectName(QStringLiteral("dockWidgetContents_4"));
-        gridLayout = new QGridLayout(dockWidgetContents_4);
-        gridLayout->setSpacing(6);
-        gridLayout->setContentsMargins(11, 11, 11, 11);
-        gridLayout->setObjectName(QStringLiteral("gridLayout"));
-        solverSettingsTree = new QTreeView(dockWidgetContents_4);
-        solverSettingsTree->setObjectName(QStringLiteral("solverSettingsTree"));
-
-        gridLayout->addWidget(solverSettingsTree, 1, 0, 1, 1);
-
-        solverSettingsDockWidget->setWidget(dockWidgetContents_4);
-        MainWindow->addDockWidget(static_cast<Qt::DockWidgetArea>(1), solverSettingsDockWidget);
 
         menuBar->addAction(menuFile->menuAction());
         menuBar->addAction(menuEdit->menuAction());
@@ -198,7 +207,6 @@ public:
         menuWindow->addAction(menuViews->menuAction());
         menuViews->addAction(actionConsole);
         menuViews->addAction(actionResults);
-        menuViews->addAction(actionSolver_Settings);
         mainToolBar->addAction(actionRunSolver);
 
         retranslateUi(MainWindow);
@@ -216,7 +224,6 @@ public:
         actionFull_screen->setShortcut(QApplication::translate("MainWindow", "Ctrl+Shift+F11", 0));
         actionConsole->setText(QApplication::translate("MainWindow", "Console", 0));
         actionResults->setText(QApplication::translate("MainWindow", "Results", 0));
-        actionSolver_Settings->setText(QApplication::translate("MainWindow", "Solver Settings", 0));
         actionRunSolver->setText(QApplication::translate("MainWindow", "Run Solver", 0));
 #ifndef QT_NO_TOOLTIP
         actionRunSolver->setToolTip(QApplication::translate("MainWindow", "Run Solver", 0));
@@ -225,6 +232,12 @@ public:
 #ifndef QT_NO_TOOLTIP
         actionNew_Block->setToolTip(QApplication::translate("MainWindow", "Create a new block", 0));
 #endif // QT_NO_TOOLTIP
+        label->setText(QApplication::translate("MainWindow", "Model:", 0));
+        modelComboBox->clear();
+        modelComboBox->insertItems(0, QStringList()
+         << QApplication::translate("MainWindow", "Simple Linear", 0)
+         << QApplication::translate("MainWindow", "P&G", 0)
+        );
         modelTabWidget->setTabText(modelTabWidget->indexOf(modelTab), QApplication::translate("MainWindow", "New Model*", 0));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
         menuEdit->setTitle(QApplication::translate("MainWindow", "Edit", 0));
@@ -238,7 +251,6 @@ public:
         ___qtablewidgetitem1->setText(QApplication::translate("MainWindow", "Parent Block", 0));
         QTableWidgetItem *___qtablewidgetitem2 = resultsTable->horizontalHeaderItem(2);
         ___qtablewidgetitem2->setText(QApplication::translate("MainWindow", "Parent Block Type", 0));
-        solverSettingsDockWidget->setWindowTitle(QApplication::translate("MainWindow", "Solver settings", 0));
     } // retranslateUi
 
 };

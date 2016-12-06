@@ -64,6 +64,16 @@
       </property>
       <item>
        <property name="text">
+        <string>Diffuser</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Nozzle</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
         <string>T Connector</string>
        </property>
       </item>

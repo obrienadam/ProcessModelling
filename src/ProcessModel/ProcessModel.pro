@@ -22,7 +22,12 @@ SOURCES += \
     Solver.cpp \
     Equation.cpp \
     Matrix.cpp \
-    TJunction.cpp
+    Property.cpp \
+    Tee.cpp \
+    Model.cpp \
+    PGModel.cpp \
+    Diffuser.cpp \
+    Nozzle.cpp
 
 HEADERS +=\
         processmodel_global.h \
@@ -34,7 +39,12 @@ HEADERS +=\
     Solver.h \
     Equation.h \
     Matrix.h \
-    TJunction.h
+    Property.h \
+    Tee.h \
+    Model.h \
+    PGModel.h \
+    Diffuser.h \
+    Nozzle.h
 
 unix {
     target.path = /usr/lib

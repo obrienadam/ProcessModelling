@@ -18,14 +18,12 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    void runTest();
-
 private slots:
     void on_actionConsole_toggled(bool arg1);
     void on_actionResults_toggled(bool arg1);
-    void on_actionSolver_Settings_toggled(bool arg1);
     void on_actionRunSolver_triggered();
     void on_actionNew_Block_triggered();
+    void on_modelComboBox_currentIndexChanged(const QString &model);
 
 private:
 
@@ -37,7 +35,7 @@ private:
     void postProcess(const std::vector<Block*>& blocks, const std::vector<Connector*>& connectors);
 
     Ui::MainWindow *ui;
-    std::vector<ProcessModelScene> scenes_;
+    ProcessModelScene *scene_;
 
     //- Solver related objects
     std::vector<Solver> solvers_;

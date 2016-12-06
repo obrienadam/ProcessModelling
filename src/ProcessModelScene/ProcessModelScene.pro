@@ -11,7 +11,10 @@ TEMPLATE = lib
 CONFIG += staticlib
 DESTDIR = ../../lib
 
-INCLUDEPATH += ../ProcessModel
+INCLUDEPATH += \
+    ../ProcessModel \
+    ../app
+
 LIBS += -L../../lib -lProcessModel
 
 SOURCES += \

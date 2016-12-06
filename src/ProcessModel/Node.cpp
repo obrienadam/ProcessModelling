@@ -10,3 +10,10 @@ Node::Node(Type type, Block *block, Connector *connector)
 {
 
 }
+
+void Node::addProperty(const std::string &name, double value, double min, double max)
+{
+    properties_.push_back(
+                Property(name, value, min, max)
+                );
+}

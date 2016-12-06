@@ -2,6 +2,7 @@
 #define NODE_H
 
 #include <vector>
+#include "Property.h"
 #include "Equation.h"
 
 class Block;
@@ -27,6 +28,9 @@ public:
     void setConnector(Connector *connector) { connector_ = connector; }
     void removeConnector() { connector_ = nullptr; }
 
+    void addProperty(const std::string& name, double value = 0., double min = 0., double max = 0.);
+    std::vector<Property>& properties() { return properties_; }
+
     //- Misc
     Equation& equation() { return eqn_; }
     const Equation& equation() const { return eqn_; }
@@ -41,7 +45,7 @@ private:
     Connector *connector_;
 
     //- Properties
-    std::vector<double> props_;
+    std::vector<Property> properties_;
     Equation eqn_;
 };
 #endif // NODE_H

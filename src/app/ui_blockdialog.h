@@ -47,6 +47,8 @@ public:
         __qtreewidgetitem2->setFlags(Qt::ItemIsDragEnabled|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
         new QTreeWidgetItem(__qtreewidgetitem2);
         new QTreeWidgetItem(__qtreewidgetitem2);
+        new QTreeWidgetItem(__qtreewidgetitem2);
+        new QTreeWidgetItem(__qtreewidgetitem2);
         blockTreeWidget->setObjectName(QStringLiteral("blockTreeWidget"));
 
         verticalLayout->addWidget(blockTreeWidget);
@@ -87,9 +89,13 @@ public:
         QTreeWidgetItem *___qtreewidgetitem6 = blockTreeWidget->topLevelItem(2);
         ___qtreewidgetitem6->setText(0, QApplication::translate("BlockDialog", "Connectors", 0));
         QTreeWidgetItem *___qtreewidgetitem7 = ___qtreewidgetitem6->child(0);
-        ___qtreewidgetitem7->setText(0, QApplication::translate("BlockDialog", "T Connector", 0));
+        ___qtreewidgetitem7->setText(0, QApplication::translate("BlockDialog", "Diffuser", 0));
         QTreeWidgetItem *___qtreewidgetitem8 = ___qtreewidgetitem6->child(1);
-        ___qtreewidgetitem8->setText(0, QApplication::translate("BlockDialog", "Y Connector", 0));
+        ___qtreewidgetitem8->setText(0, QApplication::translate("BlockDialog", "Nozzle", 0));
+        QTreeWidgetItem *___qtreewidgetitem9 = ___qtreewidgetitem6->child(2);
+        ___qtreewidgetitem9->setText(0, QApplication::translate("BlockDialog", "T Connector", 0));
+        QTreeWidgetItem *___qtreewidgetitem10 = ___qtreewidgetitem6->child(3);
+        ___qtreewidgetitem10->setText(0, QApplication::translate("BlockDialog", "Y Connector", 0));
         blockTreeWidget->setSortingEnabled(__sortingEnabled);
 
     } // retranslateUi

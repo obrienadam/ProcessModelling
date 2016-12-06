@@ -42,3 +42,10 @@ void Connector::disconnect()
         destNode_ = nullptr;
     }
 }
+
+void Connector::addProperty(const std::string &name, double value, double min, double max)
+{
+    properties_.push_back(
+                Property(name, value, min, max)
+                );
+}

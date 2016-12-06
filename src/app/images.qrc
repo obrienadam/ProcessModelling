@@ -5,6 +5,8 @@
         <file>images/pressure_reservoir.png</file>
         <file>images/t_connector.png</file>
         <file>images/y_splitter.png</file>
+        <file>images/diffuser.png</file>
+        <file>images/nozzle.png</file>
     </qresource>
     <qresource prefix="/icons"/>
 </RCC>

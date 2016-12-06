@@ -1,10 +1,8 @@
 #include <QDebug>
 #include "MainWindow.h"
 #include "ui_mainwindow.h"
-#include "Fan.h"
-#include "PressureReservoir.h"
-#include "TJunction.h"
 #include "BlockDialog.h"
+#include "Model.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -17,19 +15,15 @@ MainWindow::MainWindow(QWidget *parent) :
     consoleLog("Gemini version 0.0 Copyright (C) 2016 Adam Robert O'Brien");
     consoleLog("Initialization completed.");
     consoleWarning("This is a very early alpha version. Only a handful of features are currently functioning. Use at your own risk!");
-    runTest();
+
+    scene_ = new ProcessModelScene(ui->graphicsView);
+    ui->graphicsView->setScene(scene_);
+    solvers_.push_back(Solver());
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-void MainWindow::runTest()
-{
-    ProcessModelScene *scene = new ProcessModelScene(ui->graphicsView);
-    ui->graphicsView->setScene(scene);
-    solvers_.push_back(Solver());
 }
 
 void MainWindow::on_actionConsole_toggled(bool arg1)
@@ -48,30 +42,11 @@ void MainWindow::on_actionResults_toggled(bool arg1)
         ui->resultsTableDockWidget->hide();
 }
 
-void MainWindow::on_actionSolver_Settings_toggled(bool arg1)
-{
-    if(arg1)
-        ui->solverSettingsDockWidget->show();
-    else
-        ui->solverSettingsDockWidget->hide();
-}
-
 void MainWindow::on_actionRunSolver_triggered()
 {
     Solver& solver = solvers_.back();
-    std::vector<Block*> blocks;
-    std::vector<Connector*> connectors;
-
-    for(QGraphicsItem* item: ui->graphicsView->scene()->items())
-        switch(item->type())
-        {
-        case BlockGraphicsItem::Type:
-            blocks.push_back(qgraphicsitem_cast<BlockGraphicsItem*>(item)->block());
-            break;
-        case ConnectorGraphicsPathItem::Type:
-            connectors.push_back(qgraphicsitem_cast<ConnectorGraphicsPathItem*>(item)->connector());
-            break;
-        }
+    std::vector<Block*> blocks = scene_->getBlocks();
+    std::vector<Connector*> connectors = scene_->getConnectors();
 
     consoleLog("Solving for " + std::to_string(blocks.size()) + " blocks and " + std::to_string(connectors.size()) + " connectors...");
     solver.solve(blocks, connectors);
@@ -98,6 +73,16 @@ void MainWindow::on_actionNew_Block_triggered()
             block = new PressureReservoir();
             image = QImage(":/blocks/images/pressure_reservoir.png");
         }
+        else if(blockType == "Diffuser")
+        {
+            block = new Diffuser();
+            image = QImage(":/blocks/images/diffuser.png");
+        }
+        else if(blockType == "Nozzle")
+        {
+            block = new Nozzle();
+            image = QImage(":/blocks/images/nozzle.png");
+        }
         else if(blockType == "T Connector")
         {
             block = new TJunction();
@@ -111,6 +96,26 @@ void MainWindow::on_actionNew_Block_triggered()
         if(scene)
             scene->addBlock(block, image, loc);
     }
+}
+
+void MainWindow::on_modelComboBox_currentIndexChanged(const QString &model)
+{
+    std::vector<Block*> blocks = scene_->getBlocks();
+    std::vector<Connector*> connectors = scene_->getConnectors();
+
+    if(model == "Simple Linear")
+    {
+
+    }
+    else if(model == "P&G")
+    {
+        PGModel model;
+        model.initialize(blocks, connectors);
+    }
+    else
+        return;
+
+    consoleLog("Flow model changed to \"" + model.toStdString() + "\".");
 }
 
 ProcessModelScene *MainWindow::getActiveProcessModel()

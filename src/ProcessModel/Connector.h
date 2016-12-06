@@ -21,10 +21,13 @@ public:
     //- Access
     Node* destNode() { return destNode_; }
 
+    //- Properties
+    void addProperty(const std::string& name, double value = 0., double min = 0., double max = 0.);
+    std::vector<Property>& properties() { return properties_; }
+
 private:
     Node* sourceNode_, *destNode_;
-
-    std::vector<double> properties_;
+    std::vector<Property> properties_;
 };
 
 #endif // CONNECTOR_H

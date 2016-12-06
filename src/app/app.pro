@@ -20,15 +20,18 @@ LIBS += -L../../lib -lProcessModel -lProcessModelScene
 
 SOURCES += main.cpp\
     BlockDialog.cpp \
-    MainWindow.cpp
+    MainWindow.cpp \
+    BlockPropertyDialog.cpp
 
 HEADERS  += \
     BlockDialog.h \
-    MainWindow.h
+    MainWindow.h \
+    BlockPropertyDialog.h
 
 FORMS    += mainwindow.ui \
     node_dialog.ui \
-    blockdialog.ui
+    blockdialog.ui \
+    blockpropertydialog.ui
 
 RESOURCES += \
     images.qrc

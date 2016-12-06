@@ -24,6 +24,32 @@ void ProcessModelScene::addBlock(Block *block, const QImage &img, const QPointF 
     addItem(blockItem);
 }
 
+std::vector<Block *> ProcessModelScene::getBlocks()
+{
+    std::vector<Block*> blocks;
+
+    for(QGraphicsItem* item: this->items())
+    {
+        if(item->type() == BlockGraphicsItem::Type)
+            blocks.push_back(qgraphicsitem_cast<BlockGraphicsItem*>(item)->block());
+    }
+
+    return blocks;
+}
+
+std::vector<Connector *> ProcessModelScene::getConnectors()
+{
+    std::vector<Connector*> connectors;
+
+    for(QGraphicsItem* item: this->items())
+    {
+        if(item->type() == ConnectorGraphicsPathItem::Type)
+            connectors.push_back(qgraphicsitem_cast<ConnectorGraphicsPathItem*>(item)->connector());
+    }
+
+    return connectors;
+}
+
 void ProcessModelScene::keyPressEvent(QKeyEvent *event)
 {
     switch(event->key())

@@ -29,3 +29,15 @@ Block::~Block()
     for(auto &node: nodes_)
         node->removeBlock();
 }
+
+void Block::addProperty(const std::string &name, double value, double min, double max)
+{
+    properties_.push_back(
+                Property(name, value, min, max)
+                );
+}
+
+void Block::setProperties(const std::vector<Property> &properties)
+{
+    properties_ = properties;
+}

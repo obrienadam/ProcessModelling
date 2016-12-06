@@ -16,7 +16,7 @@ NodeGraphicsItem::NodeGraphicsItem(Node *node, BlockGraphicsItem *block)
       connector_(nullptr)
 {
     setPen(QPen(Qt::black, 2));
-    setBrush(node_->isInput() ? Qt::white : node_->isOutput() ? Qt::black : Qt::blue);
+    setBrush(node_->isInput() ? Qt::white : node_->isOutput() ? Qt::black : Qt::gray);
 }
 
 NodeGraphicsItem::~NodeGraphicsItem()

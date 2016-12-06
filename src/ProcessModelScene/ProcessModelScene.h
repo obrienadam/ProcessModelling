@@ -16,6 +16,8 @@ public:
     ~ProcessModelScene();
 
     void addBlock(Block* block, const QImage& img, const QPointF& scenePos);
+    std::vector<Block*> getBlocks();
+    std::vector<Connector*> getConnectors();
 
 private:
 

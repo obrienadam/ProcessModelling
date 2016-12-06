@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[8];
-    char stringdata0[158];
+    QByteArrayData data[9];
+    char stringdata0[168];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -34,16 +34,18 @@ QT_MOC_LITERAL(1, 11, 24), // "on_actionConsole_toggled"
 QT_MOC_LITERAL(2, 36, 0), // ""
 QT_MOC_LITERAL(3, 37, 4), // "arg1"
 QT_MOC_LITERAL(4, 42, 24), // "on_actionResults_toggled"
-QT_MOC_LITERAL(5, 67, 32), // "on_actionSolver_Settings_toggled"
-QT_MOC_LITERAL(6, 100, 28), // "on_actionRunSolver_triggered"
-QT_MOC_LITERAL(7, 129, 28) // "on_actionNew_Block_triggered"
+QT_MOC_LITERAL(5, 67, 28), // "on_actionRunSolver_triggered"
+QT_MOC_LITERAL(6, 96, 28), // "on_actionNew_Block_triggered"
+QT_MOC_LITERAL(7, 125, 36), // "on_modelComboBox_currentIndex..."
+QT_MOC_LITERAL(8, 162, 5) // "model"
 
     },
     "MainWindow\0on_actionConsole_toggled\0"
     "\0arg1\0on_actionResults_toggled\0"
-    "on_actionSolver_Settings_toggled\0"
     "on_actionRunSolver_triggered\0"
-    "on_actionNew_Block_triggered"
+    "on_actionNew_Block_triggered\0"
+    "on_modelComboBox_currentIndexChanged\0"
+    "model"
 };
 #undef QT_MOC_LITERAL
 
@@ -63,16 +65,16 @@ static const uint qt_meta_data_MainWindow[] = {
  // slots: name, argc, parameters, tag, flags
        1,    1,   39,    2, 0x08 /* Private */,
        4,    1,   42,    2, 0x08 /* Private */,
-       5,    1,   45,    2, 0x08 /* Private */,
-       6,    0,   48,    2, 0x08 /* Private */,
-       7,    0,   49,    2, 0x08 /* Private */,
+       5,    0,   45,    2, 0x08 /* Private */,
+       6,    0,   46,    2, 0x08 /* Private */,
+       7,    1,   47,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void, QMetaType::Bool,    3,
     QMetaType::Void, QMetaType::Bool,    3,
-    QMetaType::Void, QMetaType::Bool,    3,
     QMetaType::Void,
     QMetaType::Void,
+    QMetaType::Void, QMetaType::QString,    8,
 
        0        // eod
 };
@@ -85,9 +87,9 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         switch (_id) {
         case 0: _t->on_actionConsole_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 1: _t->on_actionResults_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 2: _t->on_actionSolver_Settings_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 3: _t->on_actionRunSolver_triggered(); break;
-        case 4: _t->on_actionNew_Block_triggered(); break;
+        case 2: _t->on_actionRunSolver_triggered(); break;
+        case 3: _t->on_actionNew_Block_triggered(); break;
+        case 4: _t->on_modelComboBox_currentIndexChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         default: ;
         }
     }

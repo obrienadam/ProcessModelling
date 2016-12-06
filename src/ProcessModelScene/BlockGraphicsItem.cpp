@@ -6,6 +6,7 @@
 #include <QDebug>
 
 #include "BlockGraphicsItem.h"
+#include "BlockPropertyDialog.h"
 
 QPointF BlockGraphicsItem::np_[] = {QPointF(-10, 19), QPointF(48, 19), QPointF(20, -10)};
 
@@ -67,5 +68,10 @@ void BlockGraphicsItem::setTextPosition()
 
 void BlockGraphicsItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
+    BlockPropertyDialog dialog(block_);
 
+    if(dialog.exec() == QDialog::Accepted)
+    {
+
+    }
 }
