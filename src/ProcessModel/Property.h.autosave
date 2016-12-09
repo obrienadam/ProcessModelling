@@ -2,6 +2,7 @@
 #define PROPERTY_H
 
 #include <string>
+#include "Unit.h"
 
 class Property
 {
@@ -11,6 +12,7 @@ public:
              double value = 0.,
              double min = 0.,
              double max = 100.,
+             const Unit& unit = Unit("Metric", 1.),
              bool userSpecified = true);
 
     bool isUserSpecified() const { return userSpecified_; }
@@ -24,6 +26,7 @@ public:
 
 private:
     bool userSpecified_;
+    Unit unit_;
 
 };
 

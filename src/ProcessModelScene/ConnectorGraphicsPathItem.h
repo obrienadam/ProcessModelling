@@ -32,8 +32,10 @@ public:
     Connector* connector(){ return connector_; }
 
 private:
-
     void computePath(const QPointF& start, const QPointF& end);
+
+    //- Events
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
 
     NodeGraphicsItem *sourceNode_, *destNode_;
     Connector *connector_;

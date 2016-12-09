@@ -5,6 +5,7 @@
 #include <QDoubleSpinBox>
 
 #include "Block.h"
+#include "Connector.h"
 
 namespace Ui {
 class BlockPropertyDialog;
@@ -16,13 +17,17 @@ class BlockPropertyDialog : public QDialog
 
 public:
     explicit BlockPropertyDialog(Block* block, QWidget *parent = 0);
+    explicit BlockPropertyDialog(Connector* connector, QWidget *parent = 0);
+
     ~BlockPropertyDialog();
 
     void accept() override;
 
 private:
+    void initFields();
+
     Ui::BlockPropertyDialog *ui;
-    Block *block_;
+    std::vector<Property>& properties_;
     QList<QDoubleSpinBox*> fields_;
 };
 

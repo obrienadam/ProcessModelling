@@ -1,4 +1,6 @@
 #include <QDebug>
+#include <QMessageBox>
+
 #include "MainWindow.h"
 #include "ui_mainwindow.h"
 #include "BlockDialog.h"
@@ -73,6 +75,16 @@ void MainWindow::on_actionNew_Block_triggered()
             block = new PressureReservoir();
             image = QImage(":/blocks/images/pressure_reservoir.png");
         }
+        else if(blockType == "Mass Flow Reservoir")
+        {
+            block = new MassFlowReservoir();
+            image = QImage(":/blocks/images/mass_flow_reservoir.png");
+        }
+        else if(blockType == "Valve")
+        {
+            block = new Valve();
+            image = QImage(":/blocks/images/valve.png");
+        }
         else if(blockType == "Diffuser")
         {
             block = new Diffuser();
@@ -102,6 +114,7 @@ void MainWindow::on_modelComboBox_currentIndexChanged(const QString &model)
 {
     std::vector<Block*> blocks = scene_->getBlocks();
     std::vector<Connector*> connectors = scene_->getConnectors();
+    bool success = false;
 
     if(model == "Simple Linear")
     {
@@ -110,12 +123,13 @@ void MainWindow::on_modelComboBox_currentIndexChanged(const QString &model)
     else if(model == "P&G")
     {
         PGModel model;
-        model.initialize(blocks, connectors);
+        success = model.initialize(blocks, connectors);
     }
-    else
-        return;
 
-    consoleLog("Flow model changed to \"" + model.toStdString() + "\".");
+    if(success)
+        consoleLog("Flow model changed to \"" + model.toStdString() + "\".");
+    else
+        consoleError("Flow model could not be changed to \"" + model.toStdString() + "\".");
 }
 
 ProcessModelScene *MainWindow::getActiveProcessModel()

@@ -36,6 +36,19 @@
      </item>
      <item>
       <property name="text">
+       <string>Flow control</string>
+      </property>
+      <property name="flags">
+       <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+      </property>
+      <item>
+       <property name="text">
+        <string>Valve</string>
+       </property>
+      </item>
+     </item>
+     <item>
+      <property name="text">
        <string>Reservoirs</string>
       </property>
       <property name="flags">
@@ -51,7 +64,7 @@
       </item>
       <item>
        <property name="text">
-        <string>Constant Mass Flow</string>
+        <string>Mass Flow Reservoir</string>
        </property>
       </item>
      </item>

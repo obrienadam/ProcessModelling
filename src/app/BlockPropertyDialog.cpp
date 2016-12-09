@@ -7,26 +7,21 @@
 BlockPropertyDialog::BlockPropertyDialog(Block *block, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::BlockPropertyDialog),
-    block_(block)
+    properties_(block->properties())
 {
-    ui->setupUi(this);
-    setWindowTitle((block_->name + " Properties").c_str());
-    QFormLayout *layout = new QFormLayout();
+    initFields();
+    setWindowTitle((block->name + " Properties").c_str());
+    ui->formGroupBox->setTitle(("Block type: " + block->type).c_str());
+}
 
-    for(const Property& property: block_->properties())
-    {
-        QDoubleSpinBox *field = new QDoubleSpinBox();
-        field->setRange(property.min, property.max);
-        field->setValue(property.value);
-        field->setSingleStep(std::min(0.01*(property.max - property.min), 10.));
-        field->setAccelerated(true);
-
-        layout->addRow(property.name.c_str(), field);
-        fields_.push_back(field);
-    }
-
-    ui->formGroupBox->setTitle(("Block type: " + block_->type).c_str());
-    ui->formGroupBox->setLayout(layout);
+BlockPropertyDialog::BlockPropertyDialog(Connector *connector, QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::BlockPropertyDialog),
+    properties_(connector->properties())
+{
+    initFields();
+    setWindowTitle("Connector");
+    ui->formGroupBox->setTitle("Connector type: standard");
 }
 
 BlockPropertyDialog::~BlockPropertyDialog()
@@ -38,7 +33,27 @@ void BlockPropertyDialog::accept()
 {
     int i = 0;
     for(QDoubleSpinBox *field: fields_)
-        block_->properties()[i++].value = field->value();
+        properties_[i++].value = field->value();
 
     QDialog::accept();
+}
+
+void BlockPropertyDialog::initFields()
+{
+    ui->setupUi(this);
+    QFormLayout *layout = new QFormLayout();
+
+    for(const Property& property: properties_)
+    {
+        QDoubleSpinBox *field = new QDoubleSpinBox();
+        field->setRange(property.min, property.max);
+        field->setValue(property.value);
+        field->setSingleStep(std::min(0.01*(property.max - property.min), 10.));
+        field->setAccelerated(true);
+
+        layout->addRow((property.name + " (" + property.symbol + ")").c_str(), field);
+        fields_.push_back(field);
+    }
+
+    ui->formGroupBox->setLayout(layout);
 }

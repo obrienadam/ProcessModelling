@@ -43,9 +43,14 @@ void Connector::disconnect()
     }
 }
 
-void Connector::addProperty(const std::string &name, double value, double min, double max)
+void Connector::addProperty(const std::string &name, const std::string& symbol, double value, double min, double max)
 {
     properties_.push_back(
-                Property(name, value, min, max)
+                Property(name, symbol, value, min, max)
                 );
+}
+
+void Connector::setProperties(const std::vector<Property> &properties)
+{
+    properties_ = properties;
 }

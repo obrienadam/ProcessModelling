@@ -1,8 +1,10 @@
 #include <QGraphicsScene>
 #include <QPen>
+#include <QGraphicsSceneMouseEvent>
 
 #include "ConnectorGraphicsPathItem.h"
 #include "NodeGraphicsItem.h"
+#include "BlockPropertyDialog.h"
 
 ConnectorGraphicsPathItem::ConnectorGraphicsPathItem()
     :
@@ -120,4 +122,14 @@ void ConnectorGraphicsPathItem::computePath(const QPointF &start, const QPointF 
                 );
 
     QGraphicsPathItem::setPath(path);
+}
+
+void ConnectorGraphicsPathItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    BlockPropertyDialog dialog(connector_);
+
+    if(dialog.exec() == QDialog::Accepted)
+    {
+
+    }
 }

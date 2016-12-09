@@ -4,5 +4,5 @@ PressureReservoir::PressureReservoir()
     :
       Block(0, 0, 1, "Pressure Reservoir", "Patm")
 {
-    addProperty("Pressure", 101325., 0, 2*101325);
+    addProperty("Pressure", "P", 101325., 0, 2*101325);
 }

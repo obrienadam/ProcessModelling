@@ -4,5 +4,5 @@ TJunction::TJunction()
     :
       Block(1, 2, 0, "Tee", "Tee")
 {
-    addProperty("K", 0.35, 0., 10);
+    addProperty("Loss coefficient", "K", 0.35, 0., 10);
 }

@@ -37,7 +37,7 @@ public:
     const std::string& getType() const { return type; }
 
     //- Properties
-    void addProperty(const std::string& name, double value = 0., double min = 0., double max = 100.);
+    void addProperty(const std::string& name, const std::string &symbol, double value = 0., double min = 0., double max = 100.);
     void setProperties(const std::vector<Property>& properties);
 
     std::vector<Property>& properties() { return properties_; }
@@ -57,6 +57,8 @@ private:
 
 #include "Fan.h"
 #include "PressureReservoir.h"
+#include "MassFlowReservoir.h"
+#include "Valve.h"
 #include "Diffuser.h"
 #include "Nozzle.h"
 #include "Tee.h"

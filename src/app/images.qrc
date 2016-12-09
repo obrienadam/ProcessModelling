@@ -7,6 +7,8 @@
         <file>images/y_splitter.png</file>
         <file>images/diffuser.png</file>
         <file>images/nozzle.png</file>
+        <file>images/valve.png</file>
+        <file>images/mass_flow_reservoir.png</file>
     </qresource>
     <qresource prefix="/icons"/>
 </RCC>

@@ -27,7 +27,10 @@ SOURCES += \
     Model.cpp \
     PGModel.cpp \
     Diffuser.cpp \
-    Nozzle.cpp
+    Nozzle.cpp \
+    Valve.cpp \
+    MassFlowReservoir.cpp \
+    Unit.cpp
 
 HEADERS +=\
         processmodel_global.h \
@@ -44,7 +47,10 @@ HEADERS +=\
     Model.h \
     PGModel.h \
     Diffuser.h \
-    Nozzle.h
+    Nozzle.h \
+    Valve.h \
+    MassFlowReservoir.h \
+    Unit.h
 
 unix {
     target.path = /usr/lib

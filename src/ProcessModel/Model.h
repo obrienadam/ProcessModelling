@@ -13,7 +13,7 @@ public:
     Model();
 
     bool blockIsSupported(const std::string& type);
-    void initialize(const std::vector<Block*>& blocks, const std::vector<Connector*>& connectors);
+    bool initialize(const std::vector<Block*>& blocks, const std::vector<Connector*>& connectors);
 
 protected:
 

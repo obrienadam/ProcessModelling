@@ -22,7 +22,8 @@ public:
     Node* destNode() { return destNode_; }
 
     //- Properties
-    void addProperty(const std::string& name, double value = 0., double min = 0., double max = 0.);
+    void addProperty(const std::string& name, const std::string &symbol, double value = 0., double min = 0., double max = 0.);
+    void setProperties(const std::vector<Property>& properties);
     std::vector<Property>& properties() { return properties_; }
 
 private:
