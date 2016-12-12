@@ -23,9 +23,9 @@ protected:
 
 private:
 
-    std::map<std::string, std::vector<Property>> blockProperties_;
-    std::vector<Property> connectorProperties_;
-    std::vector<Property> nodeProperties_;
+    std::map<std::string, std::map<std::string, Property>> blockProperties_;
+    std::map<std::string, Property> connectorProperties_;
+    std::map<std::string, Property> nodeProperties_;
 };
 
 #include "PGModel.h"

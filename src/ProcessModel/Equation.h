@@ -14,8 +14,9 @@ public:
     const std::vector<std::pair<Node*, double>>& coeffs() const { return coeffs_; }
     double source() const { return source_; }
 
-    void setCoeff(Node* node, double coeff);
+    void addCoeff(Node* node, double coeff);
     void setSource(double source);
+    void reset();
 
     //- Iterators
     std::vector<std::pair<Node*, double>>::iterator begin() { return coeffs_.begin(); }

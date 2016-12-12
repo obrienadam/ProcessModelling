@@ -4,6 +4,7 @@
 #include <string>
 #include <memory>
 #include <Node.h>
+#include <map>
 
 #include "Property.h"
 
@@ -38,21 +39,24 @@ public:
 
     //- Properties
     void addProperty(const std::string& name, const std::string &symbol, double value = 0., double min = 0., double max = 100.);
-    void setProperties(const std::vector<Property>& properties);
+    void setProperties(const std::map<std::string, Property> &properties);
 
-    std::vector<Property>& properties() { return properties_; }
+    //- Equations
+    virtual void setNodeEquations();
+
+    std::map<std::string, Property>& properties() { return properties_; }
 
     const std::string type;
     std::string name;
 
-private:
+protected:
     std::vector<std::shared_ptr<Node>> inputs_;
     std::vector<std::shared_ptr<Node>> outputs_;
     std::vector<std::shared_ptr<Node>> sinks_;
     std::vector<std::shared_ptr<Node>> nodes_;
 
     //- Properties
-    std::vector<Property> properties_;
+    std::map<std::string, Property> properties_;
 };
 
 #include "Fan.h"

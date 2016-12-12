@@ -27,8 +27,8 @@ private:
     void initFields();
 
     Ui::BlockPropertyDialog *ui;
-    std::vector<Property>& properties_;
-    QList<QDoubleSpinBox*> fields_;
+    std::map<std::string, Property>& properties_;
+    QList<std::pair<Property*, QDoubleSpinBox*>> fields_;
 };
 
 #endif // BLOCKPROPERTYDIALOG_H

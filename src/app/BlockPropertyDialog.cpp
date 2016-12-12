@@ -31,9 +31,8 @@ BlockPropertyDialog::~BlockPropertyDialog()
 
 void BlockPropertyDialog::accept()
 {
-    int i = 0;
-    for(QDoubleSpinBox *field: fields_)
-        properties_[i++].value = field->value();
+    for(auto &field: fields_)
+        field.first->value = field.second->value();
 
     QDialog::accept();
 }
@@ -43,8 +42,10 @@ void BlockPropertyDialog::initFields()
     ui->setupUi(this);
     QFormLayout *layout = new QFormLayout();
 
-    for(const Property& property: properties_)
+    for(auto &entry: properties_)
     {
+        Property& property = entry.second;
+
         QDoubleSpinBox *field = new QDoubleSpinBox();
         field->setRange(property.min, property.max);
         field->setValue(property.value);
@@ -52,7 +53,7 @@ void BlockPropertyDialog::initFields()
         field->setAccelerated(true);
 
         layout->addRow((property.name + " (" + property.symbol + ")").c_str(), field);
-        fields_.push_back(field);
+        fields_.push_back(std::make_pair(&property, field));
     }
 
     ui->formGroupBox->setLayout(layout);

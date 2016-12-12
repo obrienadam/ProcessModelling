@@ -27,15 +27,15 @@ bool Model::initialize(const std::vector<Block *> &blocks, const std::vector<Con
 
 void Model::addBlockProperty(const std::string &type, const Property &property)
 {
-    blockProperties_[type].push_back(property);
+    blockProperties_[type][property.name] = property;
 }
 
 void Model::addConnectorProperty(const Property &property)
 {
-    connectorProperties_.push_back(property);
+    connectorProperties_[property.name] = property;
 }
 
 void Model::addNodeProperty(const Property &property)
 {
-    nodeProperties_.push_back(property);
+    nodeProperties_[property.name] = property;
 }

@@ -32,12 +32,15 @@ Block::~Block()
 
 void Block::addProperty(const std::string &name, const std::string& symbol, double value, double min, double max)
 {
-    properties_.push_back(
-                Property(name, symbol, value, min, max)
-                );
+    properties_[name] = Property(name, symbol, value, min, max);
 }
 
-void Block::setProperties(const std::vector<Property> &properties)
+void Block::setProperties(const std::map<std::string, Property> &properties)
 {
     properties_ = properties;
+}
+
+void Block::setNodeEquations()
+{
+
 }

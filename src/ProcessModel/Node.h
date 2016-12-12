@@ -32,6 +32,7 @@ public:
     std::vector<Property>& properties() { return properties_; }
 
     //- Misc
+    void setEquation(const Equation& eqn) { eqn_ = eqn; }
     Equation& equation() { return eqn_; }
     const Equation& equation() const { return eqn_; }
     const Block* block() const { return block_; }

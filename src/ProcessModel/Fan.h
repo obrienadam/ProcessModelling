@@ -8,6 +8,8 @@ class PROCESSMODELSHARED_EXPORT Fan : public Block
 {
 public:
     Fan();
+
+    void setNodeEquations() override;
 };
 
 #endif // FAN_H

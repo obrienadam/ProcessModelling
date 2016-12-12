@@ -8,7 +8,7 @@ Equation::Equation()
 
 }
 
-void Equation::setCoeff(Node *node, double coeff)
+void Equation::addCoeff(Node *node, double coeff)
 {
     coeffs_.push_back(std::make_pair(node, coeff));
 }
@@ -16,4 +16,10 @@ void Equation::setCoeff(Node *node, double coeff)
 void Equation::setSource(double source)
 {
     source_ = source;
+}
+
+void Equation::reset()
+{
+    coeffs_.clear();
+    source_ = 0.;
 }

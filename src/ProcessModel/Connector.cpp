@@ -5,7 +5,13 @@ Connector::Connector()
       sourceNode_(nullptr),
       destNode_(nullptr)
 {
+    addProperty("Resistance", "R", 1., 0., 1000.);
 
+    setResistanceFunction(
+                [](const std::map<std::string, Property>& properties)->double
+    {
+        return properties.find("Resistance")->second.value;
+    });
 }
 
 Connector::~Connector()
@@ -45,12 +51,10 @@ void Connector::disconnect()
 
 void Connector::addProperty(const std::string &name, const std::string& symbol, double value, double min, double max)
 {
-    properties_.push_back(
-                Property(name, symbol, value, min, max)
-                );
+    properties_[name] = Property(name, symbol, value, min, max);
 }
 
-void Connector::setProperties(const std::vector<Property> &properties)
+void Connector::setProperties(const std::map<std::string, Property> &properties)
 {
     properties_ = properties;
 }

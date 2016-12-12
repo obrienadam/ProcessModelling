@@ -2,6 +2,8 @@
 #define CONNECTOR_H
 
 #include <memory>
+#include <functional>
+#include <map>
 
 #include "processmodel_global.h"
 #include "Node.h"
@@ -19,16 +21,24 @@ public:
     void disconnect();
 
     //- Access
+    Node* sourceNode() { return sourceNode_; }
     Node* destNode() { return destNode_; }
 
     //- Properties
     void addProperty(const std::string& name, const std::string &symbol, double value = 0., double min = 0., double max = 0.);
-    void setProperties(const std::vector<Property>& properties);
-    std::vector<Property>& properties() { return properties_; }
+    void setProperties(const std::map<std::string, Property> &properties);
+
+    void setResistanceFunction(const std::function<double(const std::map<std::string, Property>& properties)>& f) { resistance_ = f; }
+    double getResistance() const { return resistance_(properties_); }
+
+    std::map<std::string, Property>& properties() { return properties_; }
 
 private:
-    Node* sourceNode_, *destNode_;
-    std::vector<Property> properties_;
+    Node *sourceNode_, *destNode_;
+    std::map<std::string, Property> properties_;
+
+    //- Resistance functional
+    std::function<double(const std::map<std::string, Property>&)> resistance_;
 };
 
 #endif // CONNECTOR_H
