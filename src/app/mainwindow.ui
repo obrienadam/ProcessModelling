@@ -186,6 +186,16 @@
          <string>Parent Block Type</string>
         </property>
        </column>
+       <column>
+        <property name="text">
+         <string>Node Type</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Pressure</string>
+        </property>
+       </column>
       </widget>
      </item>
     </layout>

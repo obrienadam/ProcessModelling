@@ -5,6 +5,7 @@
 #include <QMainWindow>
 #include "ProcessModelScene.h"
 #include "Solver.h"
+#include "Model.h"
 
 namespace Ui {
 class MainWindow;
@@ -38,7 +39,7 @@ private:
     ProcessModelScene *scene_;
 
     //- Solver related objects
-    std::vector<Solver> solvers_;
+    Solver solver_;
 };
 
 #endif // MAINWINDOW_H

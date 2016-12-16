@@ -6,6 +6,7 @@
 #include "BlockGraphicsItem.h"
 #include "NodeGraphicsItem.h"
 #include "ConnectorGraphicsPathItem.h"
+#include "Model.h"
 
 class ProcessModelScene : public QGraphicsScene
 {
@@ -18,6 +19,10 @@ public:
     void addBlock(Block* block, const QImage& img, const QPointF& scenePos);
     std::vector<Block*> getBlocks();
     std::vector<Connector*> getConnectors();
+
+    //- Models
+    void setNewModel(const std::shared_ptr<Model> &model);
+    Model& model() { return *model_; }
 
 private:
 
@@ -32,6 +37,9 @@ private:
 
     //- Tmp for connecor
     ConnectorGraphicsPathItem *tmpConnector_;
+
+    //- Active model
+    std::shared_ptr<Model> model_;
 };
 
 #endif // PROCESSMODELSCENE_H

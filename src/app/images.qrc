@@ -9,6 +9,7 @@
         <file>images/nozzle.png</file>
         <file>images/valve.png</file>
         <file>images/mass_flow_reservoir.png</file>
+        <file>images/const_flow_fan.png</file>
     </qresource>
     <qresource prefix="/icons"/>
 </RCC>

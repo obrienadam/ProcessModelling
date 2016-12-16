@@ -17,21 +17,24 @@ public:
     bool solve(
             std::vector<Block*>& blocks,
             std::vector<Connector*>& connectors,
-            bool useCachedMaps = false
+            bool useCachedMaps = false,
+            int maxIters = 1
             );
 
-    const std::vector<const Node*>& nodes() const { return indexToNodeMap_; }
+    const std::vector<Node*>& nodes() const { return indexToNodeMap_; }
 
-    Matrix matrix;
+    Matrix matrix, b;
 
 private:
 
     void constructMaps(std::vector<Block*>& blocks, std::vector<Connector *> &connectors);
     void constructMatrix();
-    void mapSolutionToModel();
+
+    void mapSolutionToModel(const Matrix& x);
+    void updateFlowRates(std::vector<Connector*>& connectors);
 
     std::map<const Node*, int> nodeToIndexMap_;
-    std::vector<const Node*> indexToNodeMap_;
+    std::vector<Node*> indexToNodeMap_;
 
     //- Property names
     std::vector<std::string> nodePropertyNames_;

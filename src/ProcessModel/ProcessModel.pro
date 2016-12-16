@@ -30,7 +30,9 @@ SOURCES += \
     Nozzle.cpp \
     Valve.cpp \
     MassFlowReservoir.cpp \
-    Unit.cpp
+    Unit.cpp \
+    SimpleLinearModel.cpp \
+    ConstFlowFan.cpp
 
 HEADERS +=\
         processmodel_global.h \
@@ -50,7 +52,9 @@ HEADERS +=\
     Nozzle.h \
     Valve.h \
     MassFlowReservoir.h \
-    Unit.h
+    Unit.h \
+    SimpleLinearModel.h \
+    ConstFlowFan.h
 
 unix {
     target.path = /usr/lib

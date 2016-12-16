@@ -7,6 +7,8 @@ class TJunction : public Block
 {
 public:
     TJunction();
+
+    void setNodeEquations() override;
 };
 
 #endif // TJUNCTION_H

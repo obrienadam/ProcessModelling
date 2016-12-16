@@ -5,29 +5,20 @@ Model::Model()
 
 }
 
-bool Model::blockIsSupported(const std::string &type)
+bool Model::initialize(const std::vector<Connector *> &connectors)
 {
-    return blockProperties_.find(type) != blockProperties_.end();
-}
-
-bool Model::initialize(const std::vector<Block *> &blocks, const std::vector<Connector *> &connectors)
-{
-    for(Block* block: blocks)
-        if(!blockIsSupported(block->type))
-            return false;
-
-    for(Block* block: blocks)
-        block->setProperties(blockProperties_[block->type]);
-
     for(Connector* connector: connectors)
-        connector->setProperties(connectorProperties_);
+        initialize(connector);
 
     return true;
 }
 
-void Model::addBlockProperty(const std::string &type, const Property &property)
+bool Model::initialize(Connector *connector)
 {
-    blockProperties_[type][property.name] = property;
+    connector->setProperties(connectorProperties_);
+    connector->setSolutionVariables(connectorSolutionVariables_);
+    connector->setResistanceFunction(resistanceFunction_);
+    return true;
 }
 
 void Model::addConnectorProperty(const Property &property)
@@ -35,7 +26,12 @@ void Model::addConnectorProperty(const Property &property)
     connectorProperties_[property.name] = property;
 }
 
-void Model::addNodeProperty(const Property &property)
+void Model::addConnectorSolution(const Property &solution)
 {
-    nodeProperties_[property.name] = property;
+    connectorSolutionVariables_[solution.name] = solution;
+}
+
+void Model::setResistanceFunction(const std::function<double(const std::map<std::string, Property> &, const std::map<std::string, Property> &)> &resistanceFunction)
+{
+    resistanceFunction_ = resistanceFunction;
 }

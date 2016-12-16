@@ -1,4 +1,5 @@
 #include <QFormLayout>
+#include <QLabel>
 #include <QDebug>
 
 #include "BlockPropertyDialog.h"
@@ -7,7 +8,8 @@
 BlockPropertyDialog::BlockPropertyDialog(Block *block, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::BlockPropertyDialog),
-    properties_(block->properties())
+    properties_(block->properties()),
+    solution_(block->solution())
 {
     initFields();
     setWindowTitle((block->name + " Properties").c_str());
@@ -17,7 +19,8 @@ BlockPropertyDialog::BlockPropertyDialog(Block *block, QWidget *parent) :
 BlockPropertyDialog::BlockPropertyDialog(Connector *connector, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::BlockPropertyDialog),
-    properties_(connector->properties())
+    properties_(connector->properties()),
+    solution_(connector->solution())
 {
     initFields();
     setWindowTitle("Connector");
@@ -54,6 +57,14 @@ void BlockPropertyDialog::initFields()
 
         layout->addRow((property.name + " (" + property.symbol + ")").c_str(), field);
         fields_.push_back(std::make_pair(&property, field));
+    }
+
+    for(const auto &entry: solution_)
+    {
+        const Property& solution = entry.second;
+        QLabel *label = new QLabel(std::to_string(solution.value).c_str());
+
+        layout->addRow((solution.name + " (" + solution.symbol + ")").c_str(), label);
     }
 
     ui->formGroupBox->setLayout(layout);

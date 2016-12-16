@@ -184,14 +184,18 @@ public:
         verticalLayout_2->setContentsMargins(11, 11, 11, 11);
         verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
         resultsTable = new QTableWidget(dockWidgetContents_2);
-        if (resultsTable->columnCount() < 3)
-            resultsTable->setColumnCount(3);
+        if (resultsTable->columnCount() < 5)
+            resultsTable->setColumnCount(5);
         QTableWidgetItem *__qtablewidgetitem = new QTableWidgetItem();
         resultsTable->setHorizontalHeaderItem(0, __qtablewidgetitem);
         QTableWidgetItem *__qtablewidgetitem1 = new QTableWidgetItem();
         resultsTable->setHorizontalHeaderItem(1, __qtablewidgetitem1);
         QTableWidgetItem *__qtablewidgetitem2 = new QTableWidgetItem();
         resultsTable->setHorizontalHeaderItem(2, __qtablewidgetitem2);
+        QTableWidgetItem *__qtablewidgetitem3 = new QTableWidgetItem();
+        resultsTable->setHorizontalHeaderItem(3, __qtablewidgetitem3);
+        QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
+        resultsTable->setHorizontalHeaderItem(4, __qtablewidgetitem4);
         resultsTable->setObjectName(QStringLiteral("resultsTable"));
         resultsTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
@@ -251,6 +255,10 @@ public:
         ___qtablewidgetitem1->setText(QApplication::translate("MainWindow", "Parent Block", 0));
         QTableWidgetItem *___qtablewidgetitem2 = resultsTable->horizontalHeaderItem(2);
         ___qtablewidgetitem2->setText(QApplication::translate("MainWindow", "Parent Block Type", 0));
+        QTableWidgetItem *___qtablewidgetitem3 = resultsTable->horizontalHeaderItem(3);
+        ___qtablewidgetitem3->setText(QApplication::translate("MainWindow", "Node Type", 0));
+        QTableWidgetItem *___qtablewidgetitem4 = resultsTable->horizontalHeaderItem(4);
+        ___qtablewidgetitem4->setText(QApplication::translate("MainWindow", "Pressure", 0));
     } // retranslateUi
 
 };

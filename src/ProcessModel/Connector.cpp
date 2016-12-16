@@ -5,13 +5,7 @@ Connector::Connector()
       sourceNode_(nullptr),
       destNode_(nullptr)
 {
-    addProperty("Resistance", "R", 1., 0., 1000.);
 
-    setResistanceFunction(
-                [](const std::map<std::string, Property>& properties)->double
-    {
-        return properties.find("Resistance")->second.value;
-    });
 }
 
 Connector::~Connector()
@@ -33,7 +27,10 @@ bool Connector::connect(Node* sourceNode, Node* destNode)
         return false;
 
     sourceNode_ = sourceNode;
+    sourceNode_->setConnector(this);
+
     destNode_ = destNode;
+    destNode_->setConnector(this);
 
     return true;
 }
@@ -57,4 +54,9 @@ void Connector::addProperty(const std::string &name, const std::string& symbol, 
 void Connector::setProperties(const std::map<std::string, Property> &properties)
 {
     properties_ = properties;
+}
+
+void Connector::setSolutionVariables(const std::map<std::string, Property> &solutionVariables)
+{
+    solution_ = solutionVariables;
 }

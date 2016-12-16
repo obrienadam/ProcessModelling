@@ -6,35 +6,52 @@ Solver::Solver()
 
 }
 
-bool Solver::solve(std::vector<Block*> &blocks, std::vector<Connector*> &connectors, bool useCachedMaps)
+bool Solver::solve(std::vector<Block*> &blocks,
+                   std::vector<Connector*> &connectors,
+                   bool useCachedMaps,
+                   int maxIters)
 {
     if(!useCachedMaps)
         constructMaps(blocks, connectors);
 
-    //- Construct equations for block outputs/sinks
-    for(Block* block: blocks)
+    for(int i = 0; i < maxIters; ++i)
     {
-        for(const auto& node: block->outputs())
+        matrix = Matrix(nodeToIndexMap_.size(), nodeToIndexMap_.size());
+        b = Matrix(nodeToIndexMap_.size(), 1);
+
+        matrix.fill(0.);
+        b.fill(0.);
+
+        //- Construct equations for block outputs/sinks
+        for(Block* block: blocks)
         {
-            for(const auto& entry: node->equation().coeffs())
+            block->setNodeEquations();
+
+            for(const auto& node: block->nodes())
             {
-                matrix.add(
-                            nodeToIndexMap_[node.get()],
-                        nodeToIndexMap_[entry.first],
-                        entry.second
-                        );
+                int row = nodeToIndexMap_[node.get()];
+
+                for(const auto& entry: node->equation().coeffs())
+                {
+                    int col = nodeToIndexMap_[entry.first];
+
+                    matrix(row, col) += entry.second;
+
+                }
+
+                b(row, 0) = node->equation().source();
+
+                for(int j = 0; j < nodes().size(); ++j)
+                    qDebug() << row << j << matrix(row, j);
             }
-
-            //matrix.rhs.add(nodeToIndexMap_[node], node->equation().source());
         }
 
-        for(const auto& sinks: block->sinks())
-        {
+        //- Solve
+        Matrix x = arma::solve(matrix, b);
 
-        }
+        mapSolutionToModel(x);
+        updateFlowRates(connectors);
     }
-
-    //- Construct equations for connector nodes
 }
 
 void Solver::constructMaps(std::vector<Block *> &blocks, std::vector<Connector *> &connectors)
@@ -43,38 +60,18 @@ void Solver::constructMaps(std::vector<Block *> &blocks, std::vector<Connector *
     nodeToIndexMap_.clear();
     indexToNodeMap_.clear();
 
-    //- Blocks take ownership of outputs and sinks
+    //- Blocks take ownership for all nodes
     for(Block* block: blocks)
     {
-        for(auto& node: block->outputs())
+        for(auto& node: block->nodes())
         {
             indexToNodeMap_.push_back(node.get());
             nodeToIndexMap_[node.get()] = nodeIndex++;
         }
-
-        for(auto& node: block->sinks())
-        {
-            indexToNodeMap_.push_back(node.get());
-            nodeToIndexMap_[node.get()] = nodeIndex++;
-        }
-    }
-
-    //- Connectors take ownership of inputs only
-    for(Connector* connector: connectors)
-    {
-        Node* node = connector->destNode();
-        if(!node->isInput())
-            continue;
-
-        indexToNodeMap_.push_back(node);
-        nodeToIndexMap_[node] = nodeIndex++;
     }
 
     if(indexToNodeMap_.size() != nodeToIndexMap_.size())
         throw std::exception();
-
-    qDebug() << "Finished construction index maps, no errors detected."
-             << "Nodes in solution =" << indexToNodeMap_.size();
 }
 
 void Solver::constructMatrix()
@@ -82,7 +79,20 @@ void Solver::constructMatrix()
 
 }
 
-void Solver::mapSolutionToModel()
+void Solver::mapSolutionToModel(const Matrix &x)
 {
+    for(int i = 0; i < nodes().size(); ++i)
+        indexToNodeMap_[i]->setSolutionVariable("Pressure", x(i, 0));
+}
 
+void Solver::updateFlowRates(std::vector<Connector *> &connectors)
+{
+    for(Connector* connector: connectors)
+    {
+        double r = connector->getResistance();
+        double p1 = connector->sourceNode()->getSolutionVariable("Pressure");
+        double p2 = connector->destNode()->getSolutionVariable("Pressure");
+
+        connector->setSolutionVariable("Flow rate", (p1 - p2)/r);
+    }
 }

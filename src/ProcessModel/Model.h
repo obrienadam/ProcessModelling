@@ -13,21 +13,27 @@ public:
     Model();
 
     bool blockIsSupported(const std::string& type);
-    bool initialize(const std::vector<Block*>& blocks, const std::vector<Connector*>& connectors);
+
+    bool initialize(const std::vector<Connector*>& connectors);
+    bool initialize(Connector* connector);
 
 protected:
 
-    void addBlockProperty(const std::string& type, const Property& property);
     void addConnectorProperty(const Property& property);
-    void addNodeProperty(const Property& property);
+    void addConnectorSolution(const Property& solution);
+
+    void setResistanceFunction(const std::function<double(const std::map<std::string, Property>&, const std::map<std::string, Property>&)> &resistanceFunction);
 
 private:
 
-    std::map<std::string, std::map<std::string, Property>> blockProperties_;
     std::map<std::string, Property> connectorProperties_;
-    std::map<std::string, Property> nodeProperties_;
+    std::map<std::string, Property> nodeSolutionVariables_;
+    std::map<std::string, Property> connectorSolutionVariables_;
+
+    std::function<double(const std::map<std::string, Property>&, const std::map<std::string, Property>&)> resistanceFunction_;
 };
 
+#include "SimpleLinearModel.h"
 #include "PGModel.h"
 
 #endif // MODEL_H

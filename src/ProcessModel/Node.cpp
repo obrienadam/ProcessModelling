@@ -8,12 +8,10 @@ Node::Node(Type type, Block *block, Connector *connector)
       block_(block),
       connector_(connector)
 {
-
+    solutionVariables_["Pressure"] = Property("Pressure", "P", 101325., 0., 200000);
 }
 
-void Node::addProperty(const std::string &name, const std::string& symbol, double value, double min, double max)
+void Node::addSolutionVariable(const std::string &name, const std::string& symbol, double value, double min, double max)
 {
-    properties_.push_back(
-                Property(name, symbol, value, min, max)
-                );
+    solutionVariables_[name] = Property(name, symbol, value, min, max);
 }

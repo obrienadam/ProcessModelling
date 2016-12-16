@@ -28,6 +28,7 @@ public:
     std::vector<std::shared_ptr<Node>>& inputs() { return inputs_; }
     std::vector<std::shared_ptr<Node>>& outputs() { return outputs_; }
     std::vector<std::shared_ptr<Node>>& sinks() { return sinks_; }
+    std::vector<std::shared_ptr<Node>>& nodes() { return nodes_; }
 
     //- Iterator
     std::vector<std::shared_ptr<Node>>::iterator begin() { return nodes_.begin(); }
@@ -44,7 +45,9 @@ public:
     //- Equations
     virtual void setNodeEquations();
 
+    //- Properties
     std::map<std::string, Property>& properties() { return properties_; }
+    std::map<std::string, Property>& solution() { return solution_; }
 
     const std::string type;
     std::string name;
@@ -57,9 +60,11 @@ protected:
 
     //- Properties
     std::map<std::string, Property> properties_;
+    std::map<std::string, Property> solution_;
 };
 
 #include "Fan.h"
+#include "ConstFlowFan.h"
 #include "PressureReservoir.h"
 #include "MassFlowReservoir.h"
 #include "Valve.h"

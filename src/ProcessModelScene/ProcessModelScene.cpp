@@ -10,6 +10,7 @@ ProcessModelScene::ProcessModelScene(QObject *parent)
 {
     setObjectName("Process Model Scene");
     tmpConnector_ = new ConnectorGraphicsPathItem();
+    model_ = std::make_shared<SimpleLinearModel>();
 }
 
 ProcessModelScene::~ProcessModelScene()
@@ -48,6 +49,12 @@ std::vector<Connector *> ProcessModelScene::getConnectors()
     }
 
     return connectors;
+}
+
+void ProcessModelScene::setNewModel(const std::shared_ptr<Model> &model)
+{
+    model_ = model;
+    model_->initialize(getConnectors());
 }
 
 void ProcessModelScene::keyPressEvent(QKeyEvent *event)
@@ -125,6 +132,7 @@ void ProcessModelScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         if(node && tmpConnector_->connect(node))
         {
             qDebug() << "CONNECTION BABY";
+            model_->initialize(tmpConnector_->connector());
             tmpConnector_ = new ConnectorGraphicsPathItem();
         }
         else

@@ -4,7 +4,6 @@
 #include "MainWindow.h"
 #include "ui_mainwindow.h"
 #include "BlockDialog.h"
-#include "Model.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -20,7 +19,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     scene_ = new ProcessModelScene(ui->graphicsView);
     ui->graphicsView->setScene(scene_);
-    solvers_.push_back(Solver());
 }
 
 MainWindow::~MainWindow()
@@ -46,12 +44,11 @@ void MainWindow::on_actionResults_toggled(bool arg1)
 
 void MainWindow::on_actionRunSolver_triggered()
 {
-    Solver& solver = solvers_.back();
     std::vector<Block*> blocks = scene_->getBlocks();
     std::vector<Connector*> connectors = scene_->getConnectors();
 
     consoleLog("Solving for " + std::to_string(blocks.size()) + " blocks and " + std::to_string(connectors.size()) + " connectors...");
-    solver.solve(blocks, connectors);
+    solver_.solve(blocks, connectors, false, 50);
     postProcess(blocks, connectors);
     consoleLog("Solution updated.");
 }
@@ -69,6 +66,11 @@ void MainWindow::on_actionNew_Block_triggered()
         {
             block = new Fan();
             image = QImage(":/blocks/images/fan.png");
+        }
+        else if(blockType == "Constant Flow Fan")
+        {
+            block = new ConstFlowFan();
+            image = QImage(":/blocks/images/const_flow_fan.png");
         }
         else if(blockType == "Pressure Reservoir")
         {
@@ -112,19 +114,13 @@ void MainWindow::on_actionNew_Block_triggered()
 
 void MainWindow::on_modelComboBox_currentIndexChanged(const QString &model)
 {
-    std::vector<Block*> blocks = scene_->getBlocks();
     std::vector<Connector*> connectors = scene_->getConnectors();
-    bool success = false;
+    bool success = true;
 
     if(model == "Simple Linear")
-    {
-
-    }
+        scene_->setNewModel(std::make_shared<Model>(SimpleLinearModel()));
     else if(model == "P&G")
-    {
-        PGModel model;
-        success = model.initialize(blocks, connectors);
-    }
+        scene_->setNewModel(std::make_shared<Model>(PGModel()));
 
     if(success)
         consoleLog("Flow model changed to \"" + model.toStdString() + "\".");
@@ -171,19 +167,26 @@ void MainWindow::consoleError(const std::string &message)
 void MainWindow::postProcess(const std::vector<Block *> &blocks, const std::vector<Connector *> &connectors)
 {
     QTableWidget& table = *(ui->resultsTable);
-    const std::vector<const Node*>& nodes = solvers_.back().nodes();
+    const std::vector<Node*>& nodes = solver_.nodes();
 
     table.clearContents();
     table.setRowCount(nodes.size());
 
     for(int i = 0; i < nodes.size(); ++i)
     {
-        QTableWidgetItem *nodeId = new QTableWidgetItem(tr(std::to_string(i + 1).c_str()));
-        QTableWidgetItem *parentBlock = new QTableWidgetItem(tr(nodes[i]->block()->getName().c_str()));
-        QTableWidgetItem *parentBlockType = new QTableWidgetItem(tr(nodes[i]->block()->getType().c_str()));
+        const Node* node = nodes[i];
 
-        table.setItem(i, 0, nodeId);
-        table.setItem(i, 1, parentBlock);
-        table.setItem(i, 2, parentBlockType);
+        QTableWidgetItem *nodeId = new QTableWidgetItem(tr(std::to_string(i + 1).c_str()));
+        QTableWidgetItem *parentBlock = new QTableWidgetItem(tr(node->block()->getName().c_str()));
+        QTableWidgetItem *parentBlockType = new QTableWidgetItem(tr(node->block()->getType().c_str()));
+        QTableWidgetItem *nodeType = new QTableWidgetItem(tr((node->isInput() ? "Input" : node->isOutput() ? "Output" : "Sink")));
+        QTableWidgetItem *pressure = new QTableWidgetItem(tr(std::to_string(nodes[i]->solutionVariables().find("Pressure")->second.value).c_str()));
+
+        int j = 0;
+        table.setItem(i, j++, nodeId);
+        table.setItem(i, j++, parentBlock);
+        table.setItem(i, j++, parentBlockType);
+        table.setItem(i, j++, nodeType);
+        table.setItem(i, j++, pressure);
     }
 }

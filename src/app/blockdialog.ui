@@ -33,6 +33,11 @@
         <string>Fan</string>
        </property>
       </item>
+      <item>
+       <property name="text">
+        <string>Constant Flow Fan</string>
+       </property>
+      </item>
      </item>
      <item>
       <property name="text">

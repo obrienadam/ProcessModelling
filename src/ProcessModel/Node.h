@@ -1,7 +1,8 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include <vector>
+#include <map>
+
 #include "Property.h"
 #include "Equation.h"
 
@@ -28,8 +29,13 @@ public:
     void setConnector(Connector *connector) { connector_ = connector; }
     void removeConnector() { connector_ = nullptr; }
 
-    void addProperty(const std::string& name, const std::string &symbol, double value = 0., double min = 0., double max = 0.);
-    std::vector<Property>& properties() { return properties_; }
+    //- Solution variables
+    void addSolutionVariable(const std::string& name, const std::string &symbol, double value = 0., double min = 0., double max = 0.);
+
+    void setSolutionVariable(const std::string& name, double value) { solutionVariables_[name].value = value; }
+    double getSolutionVariable(const std::string& name) const { return solutionVariables_.find(name)->second.value; }
+
+    const std::map<std::string, Property>& solutionVariables() const { return solutionVariables_; }
 
     //- Misc
     void setEquation(const Equation& eqn) { eqn_ = eqn; }
@@ -46,7 +52,7 @@ private:
     Connector *connector_;
 
     //- Properties
-    std::vector<Property> properties_;
+    std::map<std::string, Property> solutionVariables_;
     Equation eqn_;
 };
 #endif // NODE_H
