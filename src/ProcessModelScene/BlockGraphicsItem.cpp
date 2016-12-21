@@ -34,8 +34,6 @@ BlockGraphicsItem::~BlockGraphicsItem()
 
     for(NodeGraphicsItem* node: nodes_)
         delete node;
-
-    delete block_;
 }
 
 //- Rendering
@@ -68,7 +66,7 @@ void BlockGraphicsItem::setTextPosition()
 
 void BlockGraphicsItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-    BlockPropertyDialog dialog(block_);
+    BlockPropertyDialog dialog(block_.get());
 
     if(dialog.exec() == QDialog::Accepted)
     {

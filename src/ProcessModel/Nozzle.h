@@ -3,7 +3,7 @@
 
 #include "Block.h"
 
-class Nozzle : public Block
+class PROCESSMODELSHARED_EXPORT Nozzle : public Block
 {
 public:
     Nozzle();

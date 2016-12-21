@@ -7,7 +7,7 @@
 #include "Block.h"
 #include "Connector.h"
 
-class Model
+class PROCESSMODELSHARED_EXPORT Model
 {
 public:
     Model();

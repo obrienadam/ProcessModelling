@@ -49,6 +49,8 @@ bool Solver::solve(std::vector<Block*> &blocks,
         mapSolutionToModel(x);
         updateFlowRates(connectors);
     }
+
+    return true;
 }
 
 void Solver::constructMaps(std::vector<Block *> &blocks, std::vector<Connector *> &connectors)

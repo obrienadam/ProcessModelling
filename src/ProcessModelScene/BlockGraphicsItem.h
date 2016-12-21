@@ -18,7 +18,7 @@ public:
     ~BlockGraphicsItem();
 
     //- Block
-    Block* block() { return block_; }
+    Block* block() { return block_.get(); }
 
     //- Rendering
     int type() const override { return Type; }
@@ -34,7 +34,7 @@ protected:
     //- Events
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
-    Block *block_;
+    std::shared_ptr<Block> block_;
     QGraphicsTextItem text_;
 
     //- Children which act as event propagators to nodes

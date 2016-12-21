@@ -1,7 +1,10 @@
-*Makefile
+*Makefile*
 bin
 lib
 *.o
 *.pro.user*
 *.stash
 *.autosave
+src/*/debug
+src/*/release
+src/*/profile

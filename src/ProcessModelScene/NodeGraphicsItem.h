@@ -17,6 +17,7 @@ public:
 
     //- Constructors
     NodeGraphicsItem(Node* node, BlockGraphicsItem* block);
+
     ~NodeGraphicsItem();
 
     //- Qt methods

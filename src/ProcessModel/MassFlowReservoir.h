@@ -3,7 +3,7 @@
 
 #include "Block.h"
 
-class MassFlowReservoir : public Block
+class PROCESSMODELSHARED_EXPORT MassFlowReservoir : public Block
 {
 public:
     MassFlowReservoir();

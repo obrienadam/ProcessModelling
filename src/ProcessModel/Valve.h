@@ -3,7 +3,7 @@
 
 #include "Block.h"
 
-class Valve : public Block
+class PROCESSMODELSHARED_EXPORT Valve : public Block
 {
 public:
     Valve();

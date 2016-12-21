@@ -6,9 +6,10 @@
 #include <Node.h>
 #include <map>
 
+#include "processmodel_global.h"
 #include "Property.h"
 
-class Block
+class PROCESSMODELSHARED_EXPORT Block
 {
 public:
 

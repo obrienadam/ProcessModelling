@@ -3,7 +3,7 @@
 
 #include "Block.h"
 
-class Diffuser : public Block
+class PROCESSMODELSHARED_EXPORT Diffuser : public Block
 {
 public:
     Diffuser();

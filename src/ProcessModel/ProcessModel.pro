@@ -11,7 +11,8 @@ TEMPLATE = lib
 DESTDIR = ../../lib
 
 DEFINES += PROCESSMODEL_LIBRARY
-LIBS += -larmadillo
+
+LIBS += -L../../lib -llapack_win64_MT -lblas_win64_MT
 
 SOURCES += \
     Block.cpp \

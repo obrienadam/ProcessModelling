@@ -3,7 +3,7 @@
 
 #include "Model.h"
 
-class SimpleLinearModel: public Model
+class PROCESSMODELSHARED_EXPORT SimpleLinearModel: public Model
 {
 public:
     SimpleLinearModel();

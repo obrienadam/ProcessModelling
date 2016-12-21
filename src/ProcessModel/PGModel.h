@@ -3,7 +3,7 @@
 
 #include "Model.h"
 
-class PGModel : public Model
+class PROCESSMODELSHARED_EXPORT PGModel : public Model
 {
 public:
     PGModel();

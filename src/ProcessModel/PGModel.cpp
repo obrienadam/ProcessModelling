@@ -1,5 +1,6 @@
 #include <math.h>
 #include <QDebug>
+\
 #include "PGModel.h"
 
 PGModel::PGModel()
@@ -17,7 +18,7 @@ PGModel::PGModel()
         double length = properties.find("Length")->second.value;
         double Q = solutionVariables.find("Flow rate")->second.value;
 
-        double area = M_PI*diameter*diameter/4/144;
+        double area = 3.14*diameter*diameter/4./144.;
 
         qDebug() << area;
 

@@ -3,7 +3,7 @@
 
 #include "Block.h"
 
-class TJunction : public Block
+class PROCESSMODELSHARED_EXPORT TJunction : public Block
 {
 public:
     TJunction();

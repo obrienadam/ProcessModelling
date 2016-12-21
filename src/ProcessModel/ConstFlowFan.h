@@ -3,7 +3,7 @@
 
 #include "Block.h"
 
-class ConstFlowFan : public Block
+class PROCESSMODELSHARED_EXPORT ConstFlowFan : public Block
 {
 public:
     ConstFlowFan();
