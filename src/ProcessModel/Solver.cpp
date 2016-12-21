@@ -40,9 +40,6 @@ bool Solver::solve(std::vector<Block*> &blocks,
                 }
 
                 b(row, 0) = node->equation().source();
-
-                for(int j = 0; j < nodes().size(); ++j)
-                    qDebug() << row << j << matrix(row, j);
             }
         }
 

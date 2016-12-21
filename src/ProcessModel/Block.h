@@ -61,6 +61,7 @@ protected:
     //- Properties
     std::map<std::string, Property> properties_;
     std::map<std::string, Property> solution_;
+    std::map<std::string, std::vector<std::string>> options_;
 };
 
 #include "Fan.h"
