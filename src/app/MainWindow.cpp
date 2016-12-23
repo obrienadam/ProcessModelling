@@ -1,3 +1,5 @@
+#include <fstream>
+
 #include <QDebug>
 #include <QMessageBox>
 
@@ -26,6 +28,35 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::writeSceneToFile(const std::string &filename)
+{
+    std::vector<Block*> blocks = scene_->getBlocks();
+    std::vector<Connector*> connectors = scene_->getConnectors();
+
+    std::ofstream fout(filename.c_str());
+
+    fout << "<? xml version=\"1.0\"?>\n"
+         << "<blocks>\n";
+
+    for(int i = 0; i < blocks.size(); ++i)
+    {
+        fout << "<block type=\"" << blocks[i]->type << "\">\n";
+
+        fout << "</block>\n";
+    }
+
+    fout << "</blocks>\n"
+         << "<connectors>\n";
+
+    for(int i = 0; i < connectors.size(); ++i)
+    {
+
+    }
+    fout << "</connectors>\n";
+
+    fout.close();
+}
+
 void MainWindow::on_actionConsole_toggled(bool arg1)
 {
     if(arg1)
@@ -34,12 +65,25 @@ void MainWindow::on_actionConsole_toggled(bool arg1)
         ui->consoleDockWidget->hide();
 }
 
-void MainWindow::on_actionResults_toggled(bool arg1)
+void MainWindow::on_actionNode_Results_toggled(bool arg1)
 {
     if(arg1)
-        ui->resultsTableDockWidget->show();
+        ui->nodeResultsDockWidget->show();
     else
-        ui->resultsTableDockWidget->hide();
+        ui->nodeResultsDockWidget->hide();
+}
+
+void MainWindow::on_actionConnector_Results_toggled(bool arg1)
+{
+    if(arg1)
+        ui->connectorResultsDockWidget->show();
+    else
+        ui->connectorResultsDockWidget->hide();
+}
+
+void MainWindow::on_actionSave_triggered()
+{
+    writeSceneToFile("test_scene.gem");
 }
 
 void MainWindow::on_actionRunSolver_triggered()
@@ -143,6 +187,11 @@ ProcessModelScene *MainWindow::getActiveProcessModel()
     return scene;
 }
 
+void MainWindow::addBlockToModel(const std::string &type, const QPointF &pos)
+{
+
+}
+
 void MainWindow::consoleLog(const std::string &message)
 {
     ui->console->append(
@@ -166,7 +215,7 @@ void MainWindow::consoleError(const std::string &message)
 
 void MainWindow::postProcess(const std::vector<Block *> &blocks, const std::vector<Connector *> &connectors)
 {
-    QTableWidget& table = *(ui->resultsTable);
+    QTableWidget& table = *(ui->nodeResultsTable);
     const std::vector<Node*>& nodes = solver_.nodes();
 
     table.clearContents();
@@ -188,5 +237,23 @@ void MainWindow::postProcess(const std::vector<Block *> &blocks, const std::vect
         table.setItem(i, j++, parentBlockType);
         table.setItem(i, j++, nodeType);
         table.setItem(i, j++, pressure);
+    }
+
+    ui->connectorResultsTable->setRowCount(connectors.size());
+
+    for(int i = 0; i < connectors.size(); ++i)
+    {
+        QTableWidgetItem *connectorId = new QTableWidgetItem(tr(std::to_string(i + 1).c_str()));
+        QTableWidgetItem *sourceNodeId = new QTableWidgetItem(tr(std::to_string(solver_.nodeId(connectors[i]->sourceNode()) + 1).c_str()));
+        QTableWidgetItem *destNodeId = new QTableWidgetItem(tr(std::to_string(solver_.nodeId(connectors[i]->destNode()) + 1).c_str()));
+        QTableWidgetItem *resistance = new QTableWidgetItem(tr(std::to_string(connectors[i]->getResistance()).c_str()));
+        QTableWidgetItem *flowRate = new QTableWidgetItem(tr(std::to_string(connectors[i]->getSolutionVariable("Flow rate")).c_str()));
+
+        int j = 0;
+        ui->connectorResultsTable->setItem(i, j++, connectorId);
+        ui->connectorResultsTable->setItem(i, j++, sourceNodeId);
+        ui->connectorResultsTable->setItem(i, j++, destNodeId);
+        ui->connectorResultsTable->setItem(i, j++, resistance);
+        ui->connectorResultsTable->setItem(i, j++, flowRate);
     }
 }

@@ -7,6 +7,8 @@ class PROCESSMODELSHARED_EXPORT MassFlowReservoir : public Block
 {
 public:
     MassFlowReservoir();
+
+    void setNodeEquations() override;
 };
 
 #endif // MASSFLOWRESERVOIR_H

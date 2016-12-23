@@ -21,13 +21,15 @@ SOURCES += \
     BlockGraphicsItem.cpp \
     ConnectorGraphicsPathItem.cpp \
     NodeGraphicsItem.cpp \
-    ProcessModelScene.cpp
+    ProcessModelScene.cpp \
+    Utilities.cpp
 
 HEADERS += \
     BlockGraphicsItem.h \
     ConnectorGraphicsPathItem.h \
     NodeGraphicsItem.h \
-    ProcessModelScene.h
+    ProcessModelScene.h \
+    Utilities.h
 
 unix {
     target.path = /usr/lib

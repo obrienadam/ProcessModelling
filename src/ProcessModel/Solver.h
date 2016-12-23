@@ -22,6 +22,7 @@ public:
             );
 
     const std::vector<Node*>& nodes() const { return indexToNodeMap_; }
+    int nodeId(const Node* node) const { return nodeToIndexMap_.find(node)->second; }
 
     Matrix matrix, b;
 

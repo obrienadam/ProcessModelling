@@ -27,6 +27,13 @@ BlockGraphicsItem::BlockGraphicsItem(Block *block, const QImage &img)
     }
 }
 
+BlockGraphicsItem::BlockGraphicsItem(const QPointF &pos, Block *block, const QImage &img)
+    :
+      BlockGraphicsItem(block, img)
+{
+    setPos(pos);
+}
+
 BlockGraphicsItem::~BlockGraphicsItem()
 {
     if(scene())

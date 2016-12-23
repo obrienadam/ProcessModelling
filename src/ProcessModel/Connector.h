@@ -31,12 +31,12 @@ public:
     void setSolutionVariable(const std::string& name, double value) { solution_[name].value = value; }
     void setSolutionVariables(const std::map<std::string, Property> &solutionVariables);
 
-    void setResistanceFunction(std::function<double(const std::map<std::string, Property>&,
-                                                    const std::map<std::string, Property>&)>& resistanceFunction)
+    void setResistanceFunction(std::function<double(const std::map<std::string, Property>&, const std::map<std::string, Property>&)>& resistanceFunction)
     {
         resistance_ = resistanceFunction;
     }
 
+    double getSolutionVariable(const std::string& var) const { return solution_.find(var)->second.value; }
     double getResistance() const { return resistance_(properties_, solution_); }
 
     //- Properties

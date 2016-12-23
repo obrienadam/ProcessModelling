@@ -15,6 +15,7 @@ public:
 
     //- Constructors/destructors
     BlockGraphicsItem(Block* block, const QImage& img);
+    BlockGraphicsItem(const QPointF& pos, Block* block, const QImage& img);
     ~BlockGraphicsItem();
 
     //- Block
