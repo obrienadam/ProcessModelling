@@ -30,14 +30,24 @@ Block::~Block()
         node->removeBlock();
 }
 
-void Block::addProperty(const std::string &name, const std::string& symbol, double value, double min, double max)
+void Block::addProperty(const Property &property)
 {
-    properties_[name] = Property(name, symbol, value, min, max);
+    properties_[property.name] = property;
 }
 
 void Block::setProperties(const std::map<std::string, Property> &properties)
 {
     properties_ = properties;
+}
+
+void Block::setProperty(const std::string &name, double value)
+{
+    properties_.find(name)->second.value = value;
+}
+
+double Block::getProperty(const std::string &name) const
+{
+    return properties_.find(name)->second.value;
 }
 
 void Block::setNodeEquations()

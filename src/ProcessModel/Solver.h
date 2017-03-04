@@ -14,11 +14,11 @@ class PROCESSMODELSHARED_EXPORT Solver
 public:
     Solver();
 
-    bool solve(
+    virtual double solve(
             std::vector<Block*>& blocks,
             std::vector<Connector*>& connectors,
             bool useCachedMaps = false,
-            int maxIters = 1
+            int maxIters = 100
             );
 
     const std::vector<Node*>& nodes() const { return indexToNodeMap_; }
@@ -26,13 +26,14 @@ public:
 
     Matrix matrix, b;
 
-private:
+protected:
 
     void constructMaps(std::vector<Block*>& blocks, std::vector<Connector *> &connectors);
     void constructMatrix();
 
     void mapSolutionToModel(const Matrix& x);
-    void updateFlowRates(std::vector<Connector*>& connectors);
+    void updateBlockSolutions(std::vector<Block*>& blocks);
+    double updateFlowRates(std::vector<Connector*>& connectors);
 
     std::map<const Node*, int> nodeToIndexMap_;
     std::vector<Node*> indexToNodeMap_;
@@ -41,5 +42,7 @@ private:
     std::vector<std::string> nodePropertyNames_;
     std::vector<std::string> connectorPropertyNames_;
 };
+
+#include "FanOptimizer.h"
 
 #endif // SOLVER_H

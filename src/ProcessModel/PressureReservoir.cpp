@@ -4,7 +4,7 @@ PressureReservoir::PressureReservoir()
     :
       Block(0, 0, 1, "Pressure Reservoir", "Patm")
 {
-    addProperty("Pressure", "P", 0, -100, 100);
+    addProperty(Property("Pressure", "P", 0, -100, 100, Unit("Pa")));
 }
 
 void PressureReservoir::setNodeEquations()

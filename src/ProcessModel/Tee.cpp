@@ -3,40 +3,63 @@
 
 TJunction::TJunction()
     :
-      Block(1, 2, 0, "Tee", "Tee")
+      Block(0, 0, 3, "Tee", "Tee")
 {
-    addProperty("Loss coefficient", "K", 1., 0.01, 1.);
+    addProperty(Property("Loss coefficient", "K", 1., 0.01, 1., Unit("N/A")));
 }
 
 void TJunction::setNodeEquations()
 {
-    Node* input = inputs_.front().get();
-    Node* output1 = outputs_[0].get();
-    Node* output2 = outputs_[1].get();
+    Equation eqns[3];
+    double r[3];
 
-    Equation eqn1, eqn2, eqn3;
-    double k = properties_.find("Loss coefficient")->second.value;
+    r[0] = nodes_[0]->connector().getResistance();
+    r[1] = nodes_[1]->connector().getResistance();
+    r[2] = nodes_[2]->connector().getResistance();
 
-    eqn1.addCoeff(input, k);
-    eqn1.addCoeff(output1, -1);
+    //- Continuity equation
+    eqns[0].addCoeff(nodes_[0]->connector().otherNode(nodes_[0].get()), r[1]*r[2]);
+    eqns[0].addCoeff(nodes_[0].get(), -r[1]*r[2]);
 
-    eqn2.addCoeff(input, k);
-    eqn2.addCoeff(output2, -1);
+    eqns[0].addCoeff(nodes_[1]->connector().otherNode(nodes_[1].get()), r[0]*r[2]);
+    eqns[0].addCoeff(nodes_[1].get(), -r[0]*r[2]);
 
-    double r1 = input->connector().getResistance();
-    double r2 = output1->connector().getResistance();
-    double r3 = output2->connector().getResistance();
+    eqns[0].addCoeff(nodes_[2]->connector().otherNode(nodes_[2].get()), r[0]*r[1]);
+    eqns[0].addCoeff(nodes_[2].get(), -r[0]*r[1]);
 
-    eqn3.addCoeff(input->connector().sourceNode(), 1/r1);
-    eqn3.addCoeff(input, -1/r1);
+    std::vector<Node*> inlets, outlets;
 
-    eqn3.addCoeff(output1, -1/r2);
-    eqn3.addCoeff(output1->connector().destNode(), 1/r2);
+    for(auto& node: nodes_)
+    {
+        double p1 = node->getSolutionVariable("Pressure");
+        double p2 = node->connector().otherNode(node.get())->getSolutionVariable("Pressure");
 
-    eqn3.addCoeff(output2, -1/r3);
-    eqn3.addCoeff(output2->connector().destNode(), 1/r3);
+        if(p1 > p2) // outlet
+            outlets.push_back(node.get());
+        else
+            inlets.push_back(node.get());
+    }
 
-    input->setEquation(eqn1);
-    output1->setEquation(eqn2);
-    output2->setEquation(eqn3);
+    double k = properties_["Loss coefficient"].value;
+
+    if(inlets.size() == 1)
+    {
+        eqns[1].addCoeff(inlets.back(), k);
+        eqns[1].addCoeff(outlets[0], -1);
+
+        eqns[2].addCoeff(inlets.back(), k);
+        eqns[2].addCoeff(outlets[1], -1);
+    }
+    else
+    {
+    //- Pressure equivalency (ideal connector)
+        eqns[1].addCoeff(nodes_[0].get(), 1.);
+        eqns[1].addCoeff(nodes_[1].get(), -1.);
+
+        eqns[2].addCoeff(nodes_[0].get(), 1.);
+        eqns[2].addCoeff(nodes_[2].get(), -1.);
+    }
+
+    for(int i = 0; i < 3; ++i)
+        nodes_[i]->setEquation(eqns[i]);
 }

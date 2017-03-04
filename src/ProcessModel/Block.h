@@ -40,8 +40,15 @@ public:
     const std::string& getType() const { return type; }
 
     //- Properties
-    void addProperty(const std::string& name, const std::string &symbol, double value = 0., double min = 0., double max = 100.);
+    void addProperty(const Property& property);
     void setProperties(const std::map<std::string, Property> &properties);
+    void setProperty(const std::string& name, double value);
+    double getProperty(const std::string& name) const;
+
+    //- Solution
+    void setSolution(const std::string& name, double value) { solution_.find(name)->second.value = value; }
+    double getSolution(const std::string& name) const { return solution_.find(name)->second.value; }
+    virtual void updateSolution() {}
 
     //- Equations
     virtual void setNodeEquations();
@@ -70,6 +77,7 @@ protected:
 #include "PressureReservoir.h"
 #include "MassFlowReservoir.h"
 #include "Valve.h"
+#include "RestrictorValve.h"
 #include "Diffuser.h"
 #include "Nozzle.h"
 #include "Tee.h"

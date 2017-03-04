@@ -12,7 +12,7 @@ DESTDIR = ../../lib
 
 DEFINES += PROCESSMODEL_LIBRARY
 
-LIBS += -L../../lib -llapack_win64_MT -lblas_win64_MT
+LIBS += -L../../lib -llapack -lblas
 
 SOURCES += \
     Block.cpp \
@@ -21,6 +21,7 @@ SOURCES += \
     PressureReservoir.cpp \
     Connector.cpp \
     Solver.cpp \
+    FanOptimizer.cpp \
     Equation.cpp \
     Matrix.cpp \
     Property.cpp \
@@ -30,6 +31,7 @@ SOURCES += \
     Diffuser.cpp \
     Nozzle.cpp \
     Valve.cpp \
+    RestrictorValve.cpp \
     MassFlowReservoir.cpp \
     Unit.cpp \
     SimpleLinearModel.cpp \
@@ -43,6 +45,7 @@ HEADERS +=\
     PressureReservoir.h \
     Connector.h \
     Solver.h \
+    FanOptimizer.h \
     Equation.h \
     Matrix.h \
     Property.h \
@@ -52,6 +55,7 @@ HEADERS +=\
     Diffuser.h \
     Nozzle.h \
     Valve.h \
+    RestrictorValve.h \
     MassFlowReservoir.h \
     Unit.h \
     SimpleLinearModel.h \

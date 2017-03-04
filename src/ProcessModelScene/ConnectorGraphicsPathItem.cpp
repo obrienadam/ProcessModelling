@@ -20,17 +20,14 @@ ConnectorGraphicsPathItem::ConnectorGraphicsPathItem(NodeGraphicsItem *sourceNod
     :
       ConnectorGraphicsPathItem()
 {
-    connector_ = new Connector();
+    connector_ = std::make_shared<Connector>(Connector());
     if(connector_->connect(sourceNode->node(), destNode->node()))
     {
         sourceNode_ = sourceNode;
         destNode_ = destNode;
     }
     else
-    {
-        delete connector_;
         connector_ = nullptr;
-    }
 }
 
 ConnectorGraphicsPathItem::~ConnectorGraphicsPathItem()
@@ -72,12 +69,12 @@ void ConnectorGraphicsPathItem::update(const QRectF &rect)
     QGraphicsPathItem::update(rect);
 }
 
-Connector* ConnectorGraphicsPathItem::connect(NodeGraphicsItem *destNode)
+std::shared_ptr<Connector> ConnectorGraphicsPathItem::connect(NodeGraphicsItem *destNode)
 {
     if(!sourceNode_ || sourceNode_->isConnected() || destNode->isConnected())
         return nullptr;
 
-    connector_ = new Connector();
+    connector_ = std::make_shared<Connector>(Connector());
 
     if(connector_->connect(sourceNode_->node(),
                            destNode->node()))
@@ -90,10 +87,7 @@ Connector* ConnectorGraphicsPathItem::connect(NodeGraphicsItem *destNode)
         return connector_;
     }
     else
-    {
-        delete connector_;
         connector_ = nullptr;
-    }
 
     return connector_;
 }
@@ -102,7 +96,6 @@ void ConnectorGraphicsPathItem::disconnect()
 {
     if(isConnected())
     {
-        delete connector_;
         connector_ = nullptr;
 
         sourceNode_->removeConnection();
@@ -126,7 +119,7 @@ void ConnectorGraphicsPathItem::computePath(const QPointF &start, const QPointF 
 
 void ConnectorGraphicsPathItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-    BlockPropertyDialog dialog(connector_);
+    BlockPropertyDialog dialog(connector_.get());
 
     if(dialog.exec() == QDialog::Accepted)
     {

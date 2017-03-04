@@ -23,6 +23,7 @@ public:
     //- Access
     Node* sourceNode() { return sourceNode_; }
     Node* destNode() { return destNode_; }
+    Node* otherNode(const Node* node);
 
     //- Properties
     void addProperty(const std::string& name, const std::string &symbol, double value = 0., double min = 0., double max = 0.);

@@ -55,7 +55,7 @@ void BlockPropertyDialog::initFields()
         field->setSingleStep(std::min(0.01*(property.max - property.min), 10.));
         field->setAccelerated(true);
 
-        layout->addRow((property.name + " (" + property.symbol + ")").c_str(), field);
+        layout->addRow((property.name + " (" + property.unit().name() + ")").c_str(), field);
         fields_.push_back(std::make_pair(&property, field));
     }
 
@@ -64,7 +64,7 @@ void BlockPropertyDialog::initFields()
         const Property& solution = entry.second;
         QLabel *label = new QLabel(std::to_string(solution.value).c_str());
 
-        layout->addRow((solution.name + " (" + solution.symbol + ")").c_str(), label);
+        layout->addRow((solution.name + " (" + solution.unit().name() + ")").c_str(), label);
     }
 
     ui->formGroupBox->setLayout(layout);

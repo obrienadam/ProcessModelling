@@ -15,12 +15,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->addAction(ui->actionNew_Block);
     ui->graphicsView->setMouseTracking(true);
 
-    consoleLog("Gemini version 0.0 Copyright (C) 2016 Adam Robert O'Brien");
+    consoleLog("Gemini version 0.0 Copyright (C) 2017 Mack Global");
     consoleLog("Initialization completed.");
     consoleWarning("This is a very early alpha version. Only a handful of features are currently functioning. Use at your own risk!");
 
     scene_ = new ProcessModelScene(ui->graphicsView);
     ui->graphicsView->setScene(scene_);
+
+    setSolver(ui->solverComboBox->currentText().toStdString());
 }
 
 MainWindow::~MainWindow()
@@ -55,6 +57,27 @@ void MainWindow::writeSceneToFile(const std::string &filename)
     fout << "</connectors>\n";
 
     fout.close();
+}
+
+void MainWindow::setSolver(const std::string &solverType)
+{
+    bool success = false;
+
+    if(solverType == "Flow Solve")
+    {
+        solver_ = std::make_shared<Solver>(Solver());
+        success = true;
+    }
+    else if(solverType == "Fan Optimization")
+    {
+        solver_ = std::make_shared<FanOptimizer>(FanOptimizer());
+        success = true;
+    }
+
+    if(success)
+        consoleLog("Set solver type \"" + solverType + "\".");
+    else
+        consoleError("could not set solver type \"" + solverType + "\".");
 }
 
 void MainWindow::on_actionConsole_toggled(bool arg1)
@@ -92,9 +115,9 @@ void MainWindow::on_actionRunSolver_triggered()
     std::vector<Connector*> connectors = scene_->getConnectors();
 
     consoleLog("Solving for " + std::to_string(blocks.size()) + " blocks and " + std::to_string(connectors.size()) + " connectors...");
-    solver_.solve(blocks, connectors, false, 50);
+    double error = solver_->solve(blocks, connectors, false, 100);
     postProcess(blocks, connectors);
-    consoleLog("Solution updated.");
+    consoleLog("Solution updated. Final error residual = " + std::to_string(error) + ".");
 }
 
 void MainWindow::on_actionNew_Block_triggered()
@@ -126,9 +149,9 @@ void MainWindow::on_actionNew_Block_triggered()
             block = new MassFlowReservoir();
             image = QImage(":/blocks/images/mass_flow_reservoir.png");
         }
-        else if(blockType == "Valve")
+        else if(blockType == "Restrictor Valve")
         {
-            block = new Valve();
+            block = new RestrictorValve();
             image = QImage(":/blocks/images/valve.png");
         }
         else if(blockType == "Diffuser")
@@ -158,7 +181,6 @@ void MainWindow::on_actionNew_Block_triggered()
 
 void MainWindow::on_modelComboBox_currentIndexChanged(const QString &model)
 {
-    std::vector<Connector*> connectors = scene_->getConnectors();
     bool success = true;
 
     if(model == "Simple Linear")
@@ -216,7 +238,7 @@ void MainWindow::consoleError(const std::string &message)
 void MainWindow::postProcess(const std::vector<Block *> &blocks, const std::vector<Connector *> &connectors)
 {
     QTableWidget& table = *(ui->nodeResultsTable);
-    const std::vector<Node*>& nodes = solver_.nodes();
+    const std::vector<Node*>& nodes = solver_->nodes();
 
     table.clearContents();
     table.setRowCount(nodes.size());
@@ -226,8 +248,8 @@ void MainWindow::postProcess(const std::vector<Block *> &blocks, const std::vect
         const Node* node = nodes[i];
 
         QTableWidgetItem *nodeId = new QTableWidgetItem(tr(std::to_string(i + 1).c_str()));
-        QTableWidgetItem *parentBlock = new QTableWidgetItem(tr(node->block()->getName().c_str()));
-        QTableWidgetItem *parentBlockType = new QTableWidgetItem(tr(node->block()->getType().c_str()));
+        QTableWidgetItem *parentBlock = new QTableWidgetItem(tr(node->block().getName().c_str()));
+        QTableWidgetItem *parentBlockType = new QTableWidgetItem(tr(node->block().getType().c_str()));
         QTableWidgetItem *nodeType = new QTableWidgetItem(tr((node->isInput() ? "Input" : node->isOutput() ? "Output" : "Sink")));
         QTableWidgetItem *pressure = new QTableWidgetItem(tr(std::to_string(nodes[i]->solutionVariables().find("Pressure")->second.value).c_str()));
 
@@ -244,8 +266,8 @@ void MainWindow::postProcess(const std::vector<Block *> &blocks, const std::vect
     for(int i = 0; i < connectors.size(); ++i)
     {
         QTableWidgetItem *connectorId = new QTableWidgetItem(tr(std::to_string(i + 1).c_str()));
-        QTableWidgetItem *sourceNodeId = new QTableWidgetItem(tr(std::to_string(solver_.nodeId(connectors[i]->sourceNode()) + 1).c_str()));
-        QTableWidgetItem *destNodeId = new QTableWidgetItem(tr(std::to_string(solver_.nodeId(connectors[i]->destNode()) + 1).c_str()));
+        QTableWidgetItem *sourceNodeId = new QTableWidgetItem(tr(std::to_string(solver_->nodeId(connectors[i]->sourceNode()) + 1).c_str()));
+        QTableWidgetItem *destNodeId = new QTableWidgetItem(tr(std::to_string(solver_->nodeId(connectors[i]->destNode()) + 1).c_str()));
         QTableWidgetItem *resistance = new QTableWidgetItem(tr(std::to_string(connectors[i]->getResistance()).c_str()));
         QTableWidgetItem *flowRate = new QTableWidgetItem(tr(std::to_string(connectors[i]->getSolutionVariable("Flow rate")).c_str()));
 
@@ -256,4 +278,9 @@ void MainWindow::postProcess(const std::vector<Block *> &blocks, const std::vect
         ui->connectorResultsTable->setItem(i, j++, resistance);
         ui->connectorResultsTable->setItem(i, j++, flowRate);
     }
+}
+
+void MainWindow::on_solverComboBox_currentIndexChanged(const QString &solver)
+{
+    setSolver(solver.toStdString());
 }

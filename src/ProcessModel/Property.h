@@ -22,12 +22,14 @@ public:
     bool operator<(const std::string& propertyName) const { return name < propertyName; }
     bool operator<(const char propertyName[]) const { return name < propertyName; }
 
+    const Unit& unit() const { return unit_; }
+
     std::string name, symbol;
     double value, min, max;
 
 private:
     bool userSpecified_;
-    //Unit unit_;
+    Unit unit_;
 
 };
 

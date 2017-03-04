@@ -21,6 +21,7 @@ public:
 
     void writeSceneToFile(const std::string& filename);
     void loadSceneFromFile(const std::string& filename);
+    void setSolver(const std::string& solverType);
 
 private slots:
     void on_actionConsole_toggled(bool arg1);
@@ -30,6 +31,7 @@ private slots:
     void on_actionRunSolver_triggered();
     void on_actionNew_Block_triggered();
     void on_modelComboBox_currentIndexChanged(const QString &model);
+    void on_solverComboBox_currentIndexChanged(const QString &solver);
 
 private:
 
@@ -47,7 +49,7 @@ private:
     ProcessModelScene *scene_;
 
     //- Solver related objects
-    Solver solver_;
+    std::shared_ptr<Solver> solver_;
 };
 
 #endif // MAINWINDOW_H

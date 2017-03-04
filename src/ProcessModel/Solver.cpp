@@ -6,19 +6,22 @@ Solver::Solver()
 
 }
 
-bool Solver::solve(std::vector<Block*> &blocks,
-                   std::vector<Connector*> &connectors,
-                   bool useCachedMaps,
-                   int maxIters)
+double Solver::solve(std::vector<Block*> &blocks,
+                     std::vector<Connector*> &connectors,
+                     bool useCachedMaps,
+                     int maxIters)
 {
     if(!useCachedMaps)
         constructMaps(blocks, connectors);
 
+    for(Connector* conn: connectors)
+        conn->setSolutionVariable("Flow rate", 0.);
+
+    Matrix matrix(nodes().size(), nodes().size());
+    Matrix x(nodes().size(), 1), xOld(nodes().size(), 1), b(nodes().size(), 1);
+
     for(int i = 0; i < maxIters; ++i)
     {
-        matrix = Matrix(nodeToIndexMap_.size(), nodeToIndexMap_.size());
-        b = Matrix(nodeToIndexMap_.size(), 1);
-
         matrix.fill(0.);
         b.fill(0.);
 
@@ -44,13 +47,18 @@ bool Solver::solve(std::vector<Block*> &blocks,
         }
 
         //- Solve
-        Matrix x = arma::solve(matrix, b);
+        xOld = x;
+        x = arma::solve(matrix, b);
 
         mapSolutionToModel(x);
-        updateFlowRates(connectors);
+        double error = updateFlowRates(connectors);
+        updateBlockSolutions(blocks);
+
+        if(error < 1e-12)
+            return error;
     }
 
-    return true;
+    return -1;
 }
 
 void Solver::constructMaps(std::vector<Block *> &blocks, std::vector<Connector *> &connectors)
@@ -84,14 +92,27 @@ void Solver::mapSolutionToModel(const Matrix &x)
         indexToNodeMap_[i]->setSolutionVariable("Pressure", x(i, 0));
 }
 
-void Solver::updateFlowRates(std::vector<Connector *> &connectors)
+void Solver::updateBlockSolutions(std::vector<Block *> &blocks)
 {
+    for(Block* block: blocks)
+        block->updateSolution();
+}
+
+double Solver::updateFlowRates(std::vector<Connector *> &connectors)
+{
+    double errorNorm = 0.;
+
     for(Connector* connector: connectors)
     {
         double r = connector->getResistance();
         double p1 = connector->sourceNode()->getSolutionVariable("Pressure");
         double p2 = connector->destNode()->getSolutionVariable("Pressure");
+        double Qold = connector->getSolutionVariable("Flow rate");
+        double Q = ((p1 - p2)/r + Qold)/2.;
 
-        connector->setSolutionVariable("Flow rate", (p1 - p2)/r);
+        connector->setSolutionVariable("Flow rate", Q);
+        errorNorm = std::max(errorNorm, fabs((Q - Qold)/Qold));
     }
+
+    return errorNorm;
 }

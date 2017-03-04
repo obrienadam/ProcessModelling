@@ -9,6 +9,7 @@ public:
     ConstFlowFan();
 
     void setNodeEquations() override;
+    void updateSolution() override;
 };
 
 #endif // CONSTFLOWFAN_H

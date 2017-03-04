@@ -6,7 +6,7 @@
 class Unit
 {
 public:
-    Unit(const std::string& name, double convertToMetric);
+    Unit(const std::string& name = "N/A", double convertToMetric = 1.);
 
     double getMetric() const { return CONVERT_TO_METRIC_*value; }
     const std::string& name() const { return name_; }
@@ -14,8 +14,8 @@ public:
     double value;
 
 private:
-    const std::string name_;
-    const double CONVERT_TO_METRIC_;
+    std::string name_;
+    double CONVERT_TO_METRIC_;
 };
 
 #endif // UNIT_H

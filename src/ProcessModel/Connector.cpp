@@ -15,10 +15,11 @@ Connector::~Connector()
 
 bool Connector::canConnect(const Node &sourceNode, const Node &destNode) const
 {
-    return (sourceNode.isSink() && destNode.isInput())
+    return ((sourceNode.isSink() && destNode.isInput())
             || (sourceNode.isOutput() && destNode.isInput())
             || (sourceNode.isOutput() && destNode.isSink())
-            || (sourceNode.isSink() && destNode.isSink());
+            || (sourceNode.isSink() && destNode.isSink()))
+            && &sourceNode.block() != &destNode.block();
 }
 
 bool Connector::connect(Node* sourceNode, Node* destNode)
@@ -44,6 +45,16 @@ void Connector::disconnect()
         sourceNode_ = nullptr;
         destNode_ = nullptr;
     }
+}
+
+Node *Connector::otherNode(const Node *node)
+{
+    if(sourceNode_ == node)
+        return destNode_;
+    else if(destNode_ == node)
+        return sourceNode_;
+    else
+        return nullptr;
 }
 
 void Connector::addProperty(const std::string &name, const std::string& symbol, double value, double min, double max)

@@ -45,7 +45,7 @@ std::vector<Connector *> ProcessModelScene::getConnectors()
     for(QGraphicsItem* item: this->items())
     {
         if(item->type() == ConnectorGraphicsPathItem::Type)
-            connectors.push_back(qgraphicsitem_cast<ConnectorGraphicsPathItem*>(item)->connector());
+            connectors.push_back(qgraphicsitem_cast<ConnectorGraphicsPathItem*>(item)->connector().get());
     }
 
     return connectors;
@@ -132,7 +132,7 @@ void ProcessModelScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         if(node && tmpConnector_->connect(node))
         {
             qDebug() << "CONNECTION BABY";
-            model_->initialize(tmpConnector_->connector());
+            model_->initialize(tmpConnector_->connector().get());
             tmpConnector_ = new ConnectorGraphicsPathItem();
         }
         else

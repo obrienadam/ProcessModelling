@@ -22,6 +22,7 @@ public:
     bool isSink() const { return type_ == SINK; }
 
     Block& block() { return *block_; }
+    const Block& block() const { return *block_; }
     void removeBlock() { block_ = nullptr; }
 
     //- Connector properties
@@ -41,7 +42,6 @@ public:
     void setEquation(const Equation& eqn) { eqn_ = eqn; }
     Equation& equation() { return eqn_; }
     const Equation& equation() const { return eqn_; }
-    const Block* block() const { return block_; }
 
 private:
 

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.6.1
+** Created by: Qt User Interface Compiler version 5.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -49,6 +49,8 @@ public:
     QLabel *label;
     QHBoxLayout *horizontalLayout;
     QComboBox *modelComboBox;
+    QLabel *label_2;
+    QComboBox *solverComboBox;
     QSpacerItem *horizontalSpacer;
     QGraphicsView *graphicsView;
     QMenuBar *menuBar;
@@ -116,6 +118,16 @@ public:
 
         horizontalLayout->addWidget(modelComboBox);
 
+        label_2 = new QLabel(centralWidget);
+        label_2->setObjectName(QStringLiteral("label_2"));
+
+        horizontalLayout->addWidget(label_2);
+
+        solverComboBox = new QComboBox(centralWidget);
+        solverComboBox->setObjectName(QStringLiteral("solverComboBox"));
+
+        horizontalLayout->addWidget(solverComboBox);
+
         horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout->addItem(horizontalSpacer);
@@ -137,7 +149,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1024, 21));
+        menuBar->setGeometry(QRect(0, 0, 1024, 19));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         menuEdit = new QMenu(menuBar);
@@ -265,6 +277,12 @@ public:
         modelComboBox->insertItems(0, QStringList()
          << QApplication::translate("MainWindow", "Simple Linear", 0)
          << QApplication::translate("MainWindow", "P&G", 0)
+        );
+        label_2->setText(QApplication::translate("MainWindow", "Solver: ", 0));
+        solverComboBox->clear();
+        solverComboBox->insertItems(0, QStringList()
+         << QApplication::translate("MainWindow", "Flow Solve", 0)
+         << QApplication::translate("MainWindow", "Fan Optimization", 0)
         );
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
         menuEdit->setTitle(QApplication::translate("MainWindow", "Edit", 0));

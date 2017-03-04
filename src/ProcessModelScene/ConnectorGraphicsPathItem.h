@@ -26,10 +26,10 @@ public:
     NodeGraphicsItem* sourceNode() { return sourceNode_; }
     NodeGraphicsItem* destNode() { return destNode_; }
 
-    bool isConnected() const { return connector_; }
-    Connector* connect(NodeGraphicsItem* destNode);
+    bool isConnected() const { return connector_ != nullptr; }
+    std::shared_ptr<Connector> connect(NodeGraphicsItem* destNode);
     void disconnect();
-    Connector* connector(){ return connector_; }
+    std::shared_ptr<Connector> connector(){ return connector_; }
 
 private:
     void computePath(const QPointF& start, const QPointF& end);
@@ -38,7 +38,7 @@ private:
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
 
     NodeGraphicsItem *sourceNode_, *destNode_;
-    Connector *connector_;
+    std::shared_ptr<Connector> connector_;
 };
 
 #endif // ConnectorGraphicsPathItem_H

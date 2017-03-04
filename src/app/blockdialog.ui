@@ -16,6 +16,9 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTreeWidget" name="blockTreeWidget">
+     <property name="autoExpandDelay">
+      <number>0</number>
+     </property>
      <column>
       <property name="text">
        <string>Blocks</string>
@@ -48,7 +51,7 @@
       </property>
       <item>
        <property name="text">
-        <string>Valve</string>
+        <string>Restrictor Valve</string>
        </property>
       </item>
      </item>

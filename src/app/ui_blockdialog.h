@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'blockdialog.ui'
 **
-** Created by: Qt User Interface Compiler version 5.6.1
+** Created by: Qt User Interface Compiler version 5.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -54,6 +54,7 @@ public:
         new QTreeWidgetItem(__qtreewidgetitem3);
         new QTreeWidgetItem(__qtreewidgetitem3);
         blockTreeWidget->setObjectName(QStringLiteral("blockTreeWidget"));
+        blockTreeWidget->setAutoExpandDelay(0);
 
         verticalLayout->addWidget(blockTreeWidget);
 
@@ -89,7 +90,7 @@ public:
         QTreeWidgetItem *___qtreewidgetitem4 = blockTreeWidget->topLevelItem(1);
         ___qtreewidgetitem4->setText(0, QApplication::translate("BlockDialog", "Flow control", 0));
         QTreeWidgetItem *___qtreewidgetitem5 = ___qtreewidgetitem4->child(0);
-        ___qtreewidgetitem5->setText(0, QApplication::translate("BlockDialog", "Valve", 0));
+        ___qtreewidgetitem5->setText(0, QApplication::translate("BlockDialog", "Restrictor Valve", 0));
         QTreeWidgetItem *___qtreewidgetitem6 = blockTreeWidget->topLevelItem(2);
         ___qtreewidgetitem6->setText(0, QApplication::translate("BlockDialog", "Reservoirs", 0));
         QTreeWidgetItem *___qtreewidgetitem7 = ___qtreewidgetitem6->child(0);
