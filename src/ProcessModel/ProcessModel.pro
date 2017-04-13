@@ -25,7 +25,9 @@ SOURCES += \
     Equation.cpp \
     Matrix.cpp \
     Property.cpp \
+    Solution.cpp \
     Tee.cpp \
+    YConnector.cpp \
     Model.cpp \
     PGModel.cpp \
     Diffuser.cpp \
@@ -49,7 +51,9 @@ HEADERS +=\
     Equation.h \
     Matrix.h \
     Property.h \
+    Solution.h \
     Tee.h \
+    YConnector.h \
     Model.h \
     PGModel.h \
     Diffuser.h \

@@ -57,17 +57,7 @@ Node *Connector::otherNode(const Node *node)
         return nullptr;
 }
 
-void Connector::addProperty(const std::string &name, const std::string& symbol, double value, double min, double max)
+void Connector::addProperty(const Property& property)
 {
-    properties_[name] = Property(name, symbol, value, min, max);
-}
-
-void Connector::setProperties(const std::map<std::string, Property> &properties)
-{
-    properties_ = properties;
-}
-
-void Connector::setSolutionVariables(const std::map<std::string, Property> &solutionVariables)
-{
-    solution_ = solutionVariables;
+    properties_[property.symbol] = property;
 }

@@ -7,24 +7,17 @@
 class Property
 {
 public:
-    Property(const std::string& name = "Undefined",
-             const std::string& symbol = "",
+    Property(const std::string& symbol = "Undefined",
+             const std::string& description = "",
              double value = 0.,
              double min = 0.,
              double max = 100.,
-             const Unit& unit = Unit("Metric", 1.),
-             bool userSpecified = true);
+             const Unit& unit = Unit("Metric", 1.));
 
     bool isUserSpecified() const { return userSpecified_; }
-
-    //- So the type can be specified in a map/set
-    bool operator<(const Property& rhs) const { return name < rhs.name; }
-    bool operator<(const std::string& propertyName) const { return name < propertyName; }
-    bool operator<(const char propertyName[]) const { return name < propertyName; }
-
     const Unit& unit() const { return unit_; }
 
-    std::string name, symbol;
+    std::string symbol, description;
     double value, min, max;
 
 private:

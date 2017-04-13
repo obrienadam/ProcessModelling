@@ -8,9 +8,7 @@
 #include "BlockGraphicsItem.h"
 #include "BlockPropertyDialog.h"
 
-QPointF BlockGraphicsItem::np_[] = {QPointF(-10, 19), QPointF(48, 19), QPointF(20, -10)};
-
-BlockGraphicsItem::BlockGraphicsItem(Block *block, const QImage &img)
+BlockGraphicsItem::BlockGraphicsItem(Block *block, const QImage &img, const std::vector<QPointF> &nodePts)
     :
       QGraphicsPixmapItem(QPixmap::fromImage(img)),
       block_(block),
@@ -23,13 +21,13 @@ BlockGraphicsItem::BlockGraphicsItem(Block *block, const QImage &img)
     for(auto& node: *block)
     {
         nodes_.push_back(new NodeGraphicsItem(node.get(), this));
-        nodes_.back()->setPos(np_[i++]);
+        nodes_.back()->setPos(nodePts[i++]);
     }
 }
 
-BlockGraphicsItem::BlockGraphicsItem(const QPointF &pos, Block *block, const QImage &img)
+BlockGraphicsItem::BlockGraphicsItem(const QPointF &pos, Block *block, const QImage &img, const std::vector<QPointF>& nodePts)
     :
-      BlockGraphicsItem(block, img)
+      BlockGraphicsItem(block, img, nodePts)
 {
     setPos(pos);
 }

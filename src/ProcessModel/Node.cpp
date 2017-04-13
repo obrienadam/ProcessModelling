@@ -8,10 +8,20 @@ Node::Node(Type type, Block *block, Connector *connector)
       block_(block),
       connector_(connector)
 {
-    solutionVariables_["Pressure"] = Property("Pressure", "P", 101325., 0., 200000);
+    addSolution(Solution("P", "Pressure"));
 }
 
-void Node::addSolutionVariable(const std::string &name, const std::string& symbol, double value, double min, double max)
+std::string Node::type() const
 {
-    solutionVariables_[name] = Property(name, symbol, value, min, max);
+    switch(type_)
+    {
+    case INPUT: return "input";
+    case OUTPUT: return "output";
+    case SINK: return "sink";
+    }
+}
+
+void Node::addSolution(const Solution& solution)
+{
+    solutions_[solution.symbol] = solution;
 }

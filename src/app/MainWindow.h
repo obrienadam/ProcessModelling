@@ -19,19 +19,19 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    void writeSceneToFile(const std::string& filename);
-    void loadSceneFromFile(const std::string& filename);
     void setSolver(const std::string& solverType);
 
 private slots:
     void on_actionConsole_toggled(bool arg1);
     void on_actionNode_Results_toggled(bool arg1);
     void on_actionConnector_Results_toggled(bool arg1);
-    void on_actionSave_triggered();
     void on_actionRunSolver_triggered();
     void on_actionNew_Block_triggered();
     void on_modelComboBox_currentIndexChanged(const QString &model);
     void on_solverComboBox_currentIndexChanged(const QString &solver);
+    void on_actionSave_triggered();
+    void on_actionSave_As_triggered();
+    void on_actionOpen_triggered();
 
 private:
 
@@ -47,6 +47,8 @@ private:
 
     Ui::MainWindow *ui;
     ProcessModelScene *scene_;
+
+    std::string filename_ = "";
 
     //- Solver related objects
     std::shared_ptr<Solver> solver_;

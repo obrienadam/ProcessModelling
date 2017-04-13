@@ -28,7 +28,7 @@ private:
 
     Ui::BlockPropertyDialog *ui;
     std::map<std::string, Property>& properties_;
-    const std::map<std::string, Property>& solution_;
+    const std::map<std::string, Solution>& solution_;
 
     QList<std::pair<Property*, QDoubleSpinBox*>> fields_;
 };

@@ -5,7 +5,7 @@ TJunction::TJunction()
     :
       Block(0, 0, 3, "Tee", "Tee")
 {
-    addProperty(Property("Loss coefficient", "K", 1., 0.01, 1., Unit("N/A")));
+    addProperty(Property("K", "Loss coefficient", 1., 0.01, 1., Unit("N/A")));
 }
 
 void TJunction::setNodeEquations()
@@ -31,8 +31,8 @@ void TJunction::setNodeEquations()
 
     for(auto& node: nodes_)
     {
-        double p1 = node->getSolutionVariable("Pressure");
-        double p2 = node->connector().otherNode(node.get())->getSolutionVariable("Pressure");
+        double p1 = node->getSolution("P");
+        double p2 = node->connector().otherNode(node.get())->getSolution("P");
 
         if(p1 > p2) // outlet
             outlets.push_back(node.get());
@@ -40,7 +40,7 @@ void TJunction::setNodeEquations()
             inlets.push_back(node.get());
     }
 
-    double k = properties_["Loss coefficient"].value;
+    double k = properties_["K"].value;
 
     if(inlets.size() == 1)
     {

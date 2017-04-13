@@ -5,7 +5,7 @@ MassFlowReservoir::MassFlowReservoir()
     :
       Block(0, 0, 1, "Mass Flow Reservoir", "Q")
 {
-    addProperty(Property("Flow rate", "Q", 0, -10000, 10000, Unit("m^3/s")));
+    addProperty(Property("Q", "Flow rate", 0, -10000, 10000, Unit("m^3/s")));
 }
 
 void MassFlowReservoir::setNodeEquations()
@@ -17,7 +17,7 @@ void MassFlowReservoir::setNodeEquations()
 
     eqn.addCoeff(node, 1.);
     eqn.addCoeff(node->connector().destNode(), -1.);
-    eqn.setSource(r*properties_.find("Flow rate")->second.value);
+    eqn.setSource(r*properties_.find("Q")->second.value);
 
     node->setEquation(eqn);
 }

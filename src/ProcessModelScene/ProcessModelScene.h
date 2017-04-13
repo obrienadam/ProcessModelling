@@ -16,7 +16,7 @@ public:
     ProcessModelScene(QObject* parent = nullptr);
     ~ProcessModelScene();
 
-    void addBlock(Block* block, const QImage& img, const QPointF& scenePos);
+    void addBlock(Block* block, const QImage& img, const std::vector<QPointF> &nodePts, const QPointF& scenePos);
     std::vector<Block*> getBlocks();
     std::vector<Connector*> getConnectors();
 

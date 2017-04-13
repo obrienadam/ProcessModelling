@@ -26,31 +26,31 @@ public:
     Node* otherNode(const Node* node);
 
     //- Properties
-    void addProperty(const std::string& name, const std::string &symbol, double value = 0., double min = 0., double max = 0.);
-    void setProperties(const std::map<std::string, Property> &properties);
+    void addProperty(const Property& property);
+    double getProperty(const std::string& symbol) const { return properties_.find(symbol)->second.value; }
 
-    void setSolutionVariable(const std::string& name, double value) { solution_[name].value = value; }
-    void setSolutionVariables(const std::map<std::string, Property> &solutionVariables);
+    void addSolution(const Solution& solution) { solutions_[solution.symbol] = solution; }
+    void setSolution(const std::string& name, double value) { solutions_.find(name)->second.value = value; }
+    double getSolution(const std::string& name) const { return solutions_.find(name)->second.value; }
 
-    void setResistanceFunction(std::function<double(const std::map<std::string, Property>&, const std::map<std::string, Property>&)>& resistanceFunction)
+    void setResistanceFunction(std::function<double(const std::map<std::string, Property>&, const std::map<std::string, Solution>&)>& resistanceFunction)
     {
         resistance_ = resistanceFunction;
     }
 
-    double getSolutionVariable(const std::string& var) const { return solution_.find(var)->second.value; }
-    double getResistance() const { return resistance_(properties_, solution_); }
+    double getResistance() const { return resistance_(properties_, solutions_); }
 
     //- Properties
     std::map<std::string, Property>& properties() { return properties_; }
-    std::map<std::string, Property>& solution() { return solution_; }
+    std::map<std::string, Solution>& solution() { return solutions_; }
 
 private:
     Node *sourceNode_, *destNode_;
     std::map<std::string, Property> properties_;
-    std::map<std::string, Property> solution_;
+    std::map<std::string, Solution> solutions_;
 
     //- Resistance functional
-    std::function<double(const std::map<std::string, Property>&, const std::map<std::string, Property>&)> resistance_;
+    std::function<double(const std::map<std::string, Property>&, const std::map<std::string, Solution>&)> resistance_;
 };
 
 #endif // CONNECTOR_H

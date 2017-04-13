@@ -1,15 +1,18 @@
 #include "Property.h"
 
-Property::Property(const std::string &name, const std::string &symbol, double value, double min, double max, const Unit &unit, bool userSpecified)
+Property::Property(const std::string &symbol,
+                   const std::string &description,
+                   double value,
+                   double min,
+                   double max,
+                   const Unit &unit)
     :
-      name(name),
       symbol(symbol),
+      description(description),
       value(value),
       min(min),
       max(max),
-      unit_(unit),
-      userSpecified_(userSpecified)
+      unit_(unit)
 {
-    min = -1e9;
-    max = 1e9;
+
 }

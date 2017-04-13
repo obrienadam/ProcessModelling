@@ -14,8 +14,8 @@ public:
     enum {Type = UserType + 1};
 
     //- Constructors/destructors
-    BlockGraphicsItem(Block* block, const QImage& img);
-    BlockGraphicsItem(const QPointF& pos, Block* block, const QImage& img);
+    BlockGraphicsItem(Block* block, const QImage& img, const std::vector<QPointF>& nodePts);
+    BlockGraphicsItem(const QPointF& pos, Block* block, const QImage& img, const std::vector<QPointF> &nodePts);
     ~BlockGraphicsItem();
 
     //- Block
@@ -26,8 +26,6 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
 protected:
-    static QPointF np_[10];
-
     //- Helpers
     void setText();
     void setTextPosition();

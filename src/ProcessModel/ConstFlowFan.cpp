@@ -5,16 +5,15 @@ ConstFlowFan::ConstFlowFan()
     :
       Block(1, 1, 0, "Constant Flow Fan", "Q Fan")
 {
-    addProperty(Property("Flow rate", "Q", 0.01, 0.01, 1e12, Unit("m^3/s", 1.)));
-    solution_["Pressure difference"] = Property("Pressure difference", "dp");
-    solution_["Power"] = Property("Power", "W");
+    addProperty(Property("Q", "Flow rate", 0.01, 0.01, 1e12, Unit("m^3/s", 1.)));
+    addSolution(Solution("dP", "Pressure increase", "Pa"));
 }
 
 void ConstFlowFan::setNodeEquations()
 {
     Node* output = outputs_.back().get();
     Node* input = inputs_.back().get();
-    double Q = properties().find("Flow rate")->second.value;
+    double Q = properties().find("Q")->second.value;
 
     Equation inputEqn;
 
@@ -38,9 +37,8 @@ void ConstFlowFan::setNodeEquations()
 
 void ConstFlowFan::updateSolution()
 {
-    double pin = inputs().back()->getSolutionVariable("Pressure");
-    double pout = outputs().back()->getSolutionVariable("Pressure");
-    double Q = outputs().back()->connector().getSolutionVariable("Flow rate");
-    setSolution("Pressure difference", pout - pin);
-    setSolution("Power", (pout - pin)*Q);
+    double pin = inputs().back()->getSolution("P");
+    double pout = outputs().back()->getSolution("P");
+    double Q = outputs().back()->connector().getSolution("Q");
+    setSolution("dP", pout - pin);
 }

@@ -18,9 +18,9 @@ ProcessModelScene::~ProcessModelScene()
     delete tmpConnector_;
 }
 
-void ProcessModelScene::addBlock(Block *block, const QImage &img, const QPointF &scenePos)
+void ProcessModelScene::addBlock(Block *block, const QImage &img, const std::vector<QPointF>& nodePts, const QPointF &scenePos)
 {
-    BlockGraphicsItem *blockItem = new BlockGraphicsItem(block, img);
+    BlockGraphicsItem *blockItem = new BlockGraphicsItem(block, img, nodePts);
     blockItem->setPos(scenePos);
     addItem(blockItem);
 }
@@ -131,7 +131,6 @@ void ProcessModelScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
         if(node && tmpConnector_->connect(node))
         {
-            qDebug() << "CONNECTION BABY";
             model_->initialize(tmpConnector_->connector().get());
             tmpConnector_ = new ConnectorGraphicsPathItem();
         }

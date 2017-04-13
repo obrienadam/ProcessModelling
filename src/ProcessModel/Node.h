@@ -4,6 +4,7 @@
 #include <map>
 
 #include "Property.h"
+#include "Solution.h"
 #include "Equation.h"
 
 class Block;
@@ -20,6 +21,7 @@ public:
     bool isInput() const { return type_ == INPUT; }
     bool isOutput() const { return type_ == OUTPUT; }
     bool isSink() const { return type_ == SINK; }
+    std::string type() const;
 
     Block& block() { return *block_; }
     const Block& block() const { return *block_; }
@@ -31,12 +33,11 @@ public:
     void removeConnector() { connector_ = nullptr; }
 
     //- Solution variables
-    void addSolutionVariable(const std::string& name, const std::string &symbol, double value = 0., double min = 0., double max = 0.);
+    void addSolution(const Solution& solution);
+    void setSolution(const std::string& name, double value) { solutions_.find(name)->second.value = value; }
+    double getSolution(const std::string& name) const { return solutions_.find(name)->second.value; }
 
-    void setSolutionVariable(const std::string& name, double value) { solutionVariables_[name].value = value; }
-    double getSolutionVariable(const std::string& name) const { return solutionVariables_.find(name)->second.value; }
-
-    const std::map<std::string, Property>& solutionVariables() const { return solutionVariables_; }
+    const std::map<std::string, Solution>& solution() const { return solutions_; }
 
     //- Misc
     void setEquation(const Equation& eqn) { eqn_ = eqn; }
@@ -52,7 +53,7 @@ private:
     Connector *connector_;
 
     //- Properties
-    std::map<std::string, Property> solutionVariables_;
+    std::map<std::string, Solution> solutions_;
     Equation eqn_;
 };
 #endif // NODE_H

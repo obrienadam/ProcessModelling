@@ -26,7 +26,7 @@ double FanOptimizer::solve(std::vector<Block *> &blocks, std::vector<Connector *
 
     for(int i = 0; i < 10000; ++i)
     {
-        fan->setProperty("Pressure increase", dp);
+        fan->setProperty("dP", dp);
         //- Solve flow
 
         double error = Solver::solve(blocks, connectors, true, 20*maxIters);
@@ -35,8 +35,8 @@ double FanOptimizer::solve(std::vector<Block *> &blocks, std::vector<Connector *
         bool converged = true;
         for(Block* block: resistValves)
         {
-            double Qobj = block->getProperty("Target flow rate");
-            double Q = block->getSolution("Flow rate");
+            double Qobj = block->getProperty("Qobj");
+            double Q = block->getSolution("Q");
 
             if(fabs(Q - Qobj) > 1e-4)
             {

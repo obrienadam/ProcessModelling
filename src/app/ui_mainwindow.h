@@ -43,6 +43,8 @@ public:
     QAction *actionNew_Block;
     QAction *actionConnector_Results;
     QAction *actionSave;
+    QAction *actionOpen;
+    QAction *actionSave_As;
     QWidget *centralWidget;
     QVBoxLayout *verticalLayout_4;
     QFormLayout *formLayout;
@@ -95,6 +97,10 @@ public:
         actionConnector_Results->setCheckable(true);
         actionSave = new QAction(MainWindow);
         actionSave->setObjectName(QStringLiteral("actionSave"));
+        actionOpen = new QAction(MainWindow);
+        actionOpen->setObjectName(QStringLiteral("actionOpen"));
+        actionSave_As = new QAction(MainWindow);
+        actionSave_As->setObjectName(QStringLiteral("actionSave_As"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         verticalLayout_4 = new QVBoxLayout(centralWidget);
@@ -242,6 +248,8 @@ public:
         menuBar->addAction(menuEdit->menuAction());
         menuBar->addAction(menuWindow->menuAction());
         menuFile->addAction(actionSave);
+        menuFile->addAction(actionSave_As);
+        menuFile->addAction(actionOpen);
         menuWindow->addAction(actionFull_screen);
         menuWindow->addAction(menuViews->menuAction());
         menuViews->addAction(actionConsole);
@@ -272,6 +280,9 @@ public:
         actionConnector_Results->setText(QApplication::translate("MainWindow", "Connector Results", 0));
         actionSave->setText(QApplication::translate("MainWindow", "Save", 0));
         actionSave->setShortcut(QApplication::translate("MainWindow", "Ctrl+S", 0));
+        actionOpen->setText(QApplication::translate("MainWindow", "Open", 0));
+        actionOpen->setShortcut(QApplication::translate("MainWindow", "Ctrl+O", 0));
+        actionSave_As->setText(QApplication::translate("MainWindow", "Save As...", 0));
         label->setText(QApplication::translate("MainWindow", "Model:  ", 0));
         modelComboBox->clear();
         modelComboBox->insertItems(0, QStringList()

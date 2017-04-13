@@ -32,7 +32,7 @@ Block::~Block()
 
 void Block::addProperty(const Property &property)
 {
-    properties_[property.name] = property;
+    properties_[property.symbol] = property;
 }
 
 void Block::setProperties(const std::map<std::string, Property> &properties)
@@ -48,6 +48,11 @@ void Block::setProperty(const std::string &name, double value)
 double Block::getProperty(const std::string &name) const
 {
     return properties_.find(name)->second.value;
+}
+
+void Block::addSolution(const Solution &solution)
+{
+    solutions_[solution.symbol] = solution;
 }
 
 void Block::setNodeEquations()

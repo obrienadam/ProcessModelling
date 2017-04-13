@@ -5,7 +5,7 @@ Fan::Fan()
     :
       Block(1, 1, 0, "Fan", "Fan")
 {
-    addProperty(Property("Pressure increase", "dp", 0.1, 0., 1e12, Unit("Pa")));
+    addProperty(Property("dP", "Pressure increase", 0.1, 0., 1e12, Unit("Pa")));
 }
 
 void Fan::setNodeEquations()
@@ -27,7 +27,7 @@ void Fan::setNodeEquations()
     Equation outputEqn;
     outputEqn.addCoeff(output, 1.);
     outputEqn.addCoeff(input, -1.);
-    outputEqn.setSource(properties().find("Pressure increase")->second.value);
+    outputEqn.setSource(properties().find("dP")->second.value);
 
     input->setEquation(inputEqn);
     output->setEquation(outputEqn);
