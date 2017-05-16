@@ -141,11 +141,6 @@ void MainWindow::on_actionNew_Block_triggered()
             block = new Nozzle();
             image = QImage(":/blocks/images/nozzle.png");
         }
-        else if(blockType == "T Connector")
-        {
-            block = new TJunction();
-            image = QImage(":/blocks/images/t_connector.png");
-        }
         else if(blockType == "Y Connector")
         {
             block = new YConnector();
@@ -234,8 +229,8 @@ void MainWindow::postProcess(const std::vector<Block *> &blocks, const std::vect
         const Node* node = nodes[i];
 
         QTableWidgetItem *nodeId = new QTableWidgetItem(tr(std::to_string(i + 1).c_str()));
-        QTableWidgetItem *parentBlock = new QTableWidgetItem(tr(node->block().getName().c_str()));
-        QTableWidgetItem *parentBlockType = new QTableWidgetItem(tr(node->block().getType().c_str()));
+        QTableWidgetItem *parentBlock = new QTableWidgetItem(tr(node->block().name.c_str()));
+        QTableWidgetItem *parentBlockType = new QTableWidgetItem(tr(node->block().type().c_str()));
         QTableWidgetItem *nodeType = new QTableWidgetItem(tr((node->isInput() ? "Input" : node->isOutput() ? "Output" : "Sink")));
         QTableWidgetItem *pressure = new QTableWidgetItem(tr(std::to_string(nodes[i]->getSolution("P")).c_str()));
 
@@ -303,7 +298,7 @@ void MainWindow::on_actionSave_triggered()
         {
             xml.writeStartElement("Block");
             xml.writeAttribute("name", block->name.c_str());
-            xml.writeAttribute("type", block->type.c_str());
+            xml.writeAttribute("type", block->type().c_str());
 
             xml.writeStartElement("Nodes");
             for(const auto& node: block->nodes())

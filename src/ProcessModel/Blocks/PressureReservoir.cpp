@@ -2,7 +2,7 @@
 
 PressureReservoir::PressureReservoir()
     :
-      Block(0, 0, 1, "Pressure Reservoir", "Patm")
+      Block(0, 0, 1, "Const Pressure")
 {
     addProperty(Property("P", "Pressure", 0, -100, 100, Unit("Pa")));
 }

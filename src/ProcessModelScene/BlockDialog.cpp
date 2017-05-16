@@ -1,5 +1,5 @@
 #include "BlockDialog.h"
-#include "ui_blockdialog.h"
+#include "ui_BlockDialog.h"
 
 BlockDialog::BlockDialog(QWidget *parent) :
     QDialog(parent),

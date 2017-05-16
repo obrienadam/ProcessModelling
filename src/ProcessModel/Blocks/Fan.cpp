@@ -3,7 +3,7 @@
 
 Fan::Fan()
     :
-      Block(1, 1, 0, "Fan", "Fan")
+      Block(1, 1, 0, "Fan")
 {
     addProperty(Property("dP", "Pressure increase", 0.1, 0., 1e12, Unit("Pa")));
 }

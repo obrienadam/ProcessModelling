@@ -8,6 +8,9 @@ class PROCESSMODELSHARED_EXPORT RestrictorValve : public Block
 public:
     RestrictorValve();
 
+    std::string type() const
+    { return "Restrictor Valve"; }
+
     void setNodeEquations() override;
     void updateSolution() override;
 private:

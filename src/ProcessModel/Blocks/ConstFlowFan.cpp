@@ -3,7 +3,7 @@
 
 ConstFlowFan::ConstFlowFan()
     :
-      Block(1, 1, 0, "Constant Flow Fan", "Q Fan")
+      Block(1, 1, 0, "Const Flow Fan")
 {
     addProperty(Property("Q", "Flow rate", 0.01, 0.01, 1e12, Unit("m^3/s", 1.)));
     addSolution(Solution("dP", "Pressure increase", "Pa"));

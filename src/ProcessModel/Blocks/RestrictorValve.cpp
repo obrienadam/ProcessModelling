@@ -3,7 +3,7 @@
 
 RestrictorValve::RestrictorValve()
     :
-      Block(0, 0, 2, "Restrictor Valve", "R-Valve")
+      Block(0, 0, 2, "R-Valve")
 {
     addProperty(Property("Qmax", "Maximum flow rate", 1., 0., 1000., Unit("m^3/s", 1.)));
     addProperty(Property("Rmin", "Minimum resistance", 0, 0., 100., Unit("m^3/s", 1.)));

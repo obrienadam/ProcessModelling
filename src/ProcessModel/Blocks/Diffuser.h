@@ -7,6 +7,9 @@ class PROCESSMODELSHARED_EXPORT Diffuser : public Block
 {
 public:
     Diffuser();
+
+    std::string type() const
+    { return "Diffuser"; }
 };
 
 #endif // DIFFUSER_H

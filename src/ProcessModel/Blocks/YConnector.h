@@ -8,6 +8,9 @@ class YConnector: public Block
 public:
     YConnector();
 
+    std::string type() const
+    { return "Y Connector"; }
+
     void setNodeEquations() override;
     void updateSolution() override;
 };

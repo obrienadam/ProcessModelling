@@ -9,6 +9,9 @@ class PROCESSMODELSHARED_EXPORT Fan : public Block
 public:
     Fan();
 
+    std::string type() const
+    { return "Fan"; }
+
     void setNodeEquations() override;
 };
 

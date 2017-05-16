@@ -5,7 +5,7 @@
 #include <QStyleOptionGraphicsItem>
 
 #include "BlockGraphicsItem.h"
-#include "BlockPropertyDialog.h"
+#include "PropertyDialog.h"
 
 BlockGraphicsItem::BlockGraphicsItem(Block *block, const QImage &img, const std::vector<QPointF> &nodePts)
     :
@@ -70,7 +70,7 @@ void BlockGraphicsItem::setTextPosition()
 
 void BlockGraphicsItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-    BlockPropertyDialog dialog(block_.get());
+    PropertyDialog dialog(block_.get());
 
     if(dialog.exec() == QDialog::Accepted)
     {

@@ -3,7 +3,7 @@
 
 MassFlowReservoir::MassFlowReservoir()
     :
-      Block(0, 0, 1, "Mass Flow Reservoir", "Q")
+      Block(0, 0, 1, "Const Flow")
 {
     addProperty(Property("Q", "Flow rate", 0, -10000, 10000, Unit("m^3/s")));
 }

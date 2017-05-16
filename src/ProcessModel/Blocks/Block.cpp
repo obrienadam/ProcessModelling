@@ -1,8 +1,7 @@
 #include "Block.h"
 
-Block::Block(int nInputs, int nOutputs, int nSinks, const std::string &type, const std::string &name)
+Block::Block(int nInputs, int nOutputs, int nSinks, const std::string &name)
     :
-      type(type),
       name(name)
 {
     for(int i = 0; i < nInputs; ++i)

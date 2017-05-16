@@ -7,6 +7,9 @@ class PROCESSMODELSHARED_EXPORT Nozzle : public Block
 {
 public:
     Nozzle();
+
+    std::string type() const
+    { return "Nozzle"; }
 };
 
 #endif // NOZZLE_H

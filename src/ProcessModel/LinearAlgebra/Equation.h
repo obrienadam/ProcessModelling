@@ -12,10 +12,13 @@ public:
     Equation();
 
     const std::vector<std::pair<Node*, double>>& coeffs() const { return coeffs_; }
+
     double source() const { return source_; }
 
     void addCoeff(Node* node, double coeff);
+
     void setSource(double source);
+
     void reset();
 
     //- Iterators

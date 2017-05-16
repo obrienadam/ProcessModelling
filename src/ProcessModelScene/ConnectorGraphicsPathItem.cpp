@@ -4,7 +4,7 @@
 
 #include "ConnectorGraphicsPathItem.h"
 #include "NodeGraphicsItem.h"
-#include "BlockPropertyDialog.h"
+#include "PropertyDialog.h"
 
 ConnectorGraphicsPathItem::ConnectorGraphicsPathItem()
     :
@@ -119,7 +119,7 @@ void ConnectorGraphicsPathItem::computePath(const QPointF &start, const QPointF 
 
 void ConnectorGraphicsPathItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-    BlockPropertyDialog dialog(connector_.get());
+    PropertyDialog dialog(connector_.get());
 
     if(dialog.exec() == QDialog::Accepted)
     {

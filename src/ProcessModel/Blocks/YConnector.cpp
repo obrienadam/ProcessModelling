@@ -3,7 +3,7 @@
 
 YConnector::YConnector()
     :
-      Block(2, 1, 0, "Y-Connector", "Y-Connector")
+      Block(2, 1, 0, "Y-Connector")
 {
     addProperty(Property("Kre", "Static regain coefficient", 0.6, 0., 1., Unit()));
     addProperty(Property("Kloss", "Static loss coefficient", 1., 1., 1.5, Unit()));

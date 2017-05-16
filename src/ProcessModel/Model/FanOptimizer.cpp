@@ -7,9 +7,9 @@ double FanOptimizer::solve(std::vector<Block *> &blocks, std::vector<Connector *
 
     for(Block* block: blocks)
     {
-        if(block->type == "Fan")
+        if(block->type() == "Fan")
             fan = block;
-        else if(block->type == "Restrictor Valve")
+        else if(block->type() == "Restrictor Valve")
             resistValves.push_back(block);
     }
 
