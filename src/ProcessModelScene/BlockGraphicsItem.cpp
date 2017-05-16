@@ -3,7 +3,6 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QStyleOptionGraphicsItem>
-#include <QDebug>
 
 #include "BlockGraphicsItem.h"
 #include "BlockPropertyDialog.h"
