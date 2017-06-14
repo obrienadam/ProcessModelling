@@ -10,6 +10,9 @@
 #include "MainWindow.h"
 #include "ui_mainwindow.h"
 #include "BlockDialog.h"
+#include "IncompressibleFlowModel.h"
+#include "PGFlowModel.h"
+#include "FanOptimizerDialog.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -19,14 +22,20 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->addAction(ui->actionNew_Block);
     ui->graphicsView->setMouseTracking(true);
 
-    consoleLog("Gemini version 0.0 Copyright (C) 2017 Mack Global");
-    consoleLog("Initialization completed.");
+    consoleLog("Bernoulli version 0.0 Copyright (C) 2017 Mack Global");
     consoleWarning("This is a very early alpha version. Only a handful of features are currently functioning. Use at your own risk!");
 
     scene_ = new ProcessModelScene(ui->graphicsView);
     ui->graphicsView->setScene(scene_);
 
-    setSolver(ui->solverComboBox->currentText().toStdString());
+    QMainWindow::tabifyDockWidget(ui->nodeResultsDockWidget, ui->connectorResultsDockWidget);
+    QMainWindow::tabifyDockWidget(ui->connectorResultsDockWidget, ui->consoleDockWidget);
+
+    ui->actionNode_Results->setChecked(true);
+    ui->actionConnector_Results->setChecked(true);
+    ui->actionConsole->setChecked(true);
+
+    on_modelComboBox_currentIndexChanged(QString("Incompressible"));
 }
 
 MainWindow::~MainWindow()
@@ -34,25 +43,71 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::setSolver(const std::string &solverType)
+BlockGraphicsItem* MainWindow::addBlock(const std::string &blockType, const QPointF &pos)
 {
-    bool success = false;
+    std::shared_ptr<Block> block;
+    QImage image(":/blocks/images/default.png");
 
-    if(solverType == "Flow Solve")
-    {
-        solver_ = std::make_shared<Solver>(Solver());
-        success = true;
-    }
-    else if(solverType == "Fan Optimization")
-    {
-        solver_ = std::make_shared<FanOptimizer>(FanOptimizer());
-        success = true;
-    }
+    //- Default node points
+    std::vector<QPointF> nodePts = {
+        QPointF(-10, 19),
+        QPointF(48, 19),
+        QPointF(20, -10)
+    };
 
-    if(success)
-        consoleLog("Set solver type \"" + solverType + "\".");
+    if(blockType == "Fan")
+    {
+        block = std::shared_ptr<Block>(new Fan());
+        image = QImage(":/blocks/images/fan.png");
+    }
+    else if(blockType == "Constant Flow Fan")
+    {
+        block = std::shared_ptr<Block>(new ConstFlowFan());
+        image = QImage(":/blocks/images/const_flow_fan.png");
+    }
+    else if(blockType == "Pressure Reservoir")
+    {
+        block = std::shared_ptr<Block>(new PressureReservoir());
+        image = QImage(":/blocks/images/pressure_reservoir.png");
+    }
+    else if(blockType == "Mass Flow Reservoir")
+    {
+        block = std::shared_ptr<Block>(new MassFlowReservoir());
+        image = QImage(":/blocks/images/mass_flow_reservoir.png");
+    }
+    else if(blockType == "Restrictor Valve")
+    {
+        block = std::shared_ptr<Block>(new RestrictorValve());
+        image = QImage(":/blocks/images/valve.png");
+    }
+    else if(blockType == "Diffuser")
+    {
+        block = std::shared_ptr<Block>(new Diffuser());
+        image = QImage(":/blocks/images/diffuser.png");
+    }
+    else if(blockType == "Nozzle")
+    {
+        block = std::shared_ptr<Block>(new Nozzle());
+        image = QImage(":/blocks/images/nozzle.png");
+    }
+    else if(blockType == "Y Connector")
+    {
+        block = std::shared_ptr<Block>(new YConnector());
+        image = QImage(":/blocks/images/y_connector.png");
+        nodePts = {
+            QPointF(-10, 2.5),
+            QPointF(-10, 35),
+            QPointF(48, 20)
+        };
+    }
     else
-        consoleError("could not set solver type \"" + solverType + "\".");
+        return nullptr;
+
+    ProcessModelScene *scene = (ProcessModelScene*)ui->graphicsView->scene();
+    if(scene)
+        return scene->addBlock(block, image, nodePts, pos);
+
+    return nullptr;
 }
 
 void MainWindow::on_actionConsole_toggled(bool arg1)
@@ -79,15 +134,21 @@ void MainWindow::on_actionConnector_Results_toggled(bool arg1)
         ui->connectorResultsDockWidget->hide();
 }
 
-void MainWindow::on_actionRunSolver_triggered()
+void MainWindow::on_actionRun_triggered()
 {
-    std::vector<Block*> blocks = scene_->getBlocks();
-    std::vector<Connector*> connectors = scene_->getConnectors();
+    auto blocks = scene_->getBlocks();
+    auto connectors = scene_->getConnectors();
 
     consoleLog("Solving for " + std::to_string(blocks.size()) + " blocks and " + std::to_string(connectors.size()) + " connectors...");
-    double error = solver_->solve(blocks, connectors, false, 100);
-    postProcess(blocks, connectors);
-    consoleLog("Solution updated. Final error residual = " + std::to_string(error) + ".");
+
+    if(flowModel_)
+    {
+        flowModel_->solve(blocks, connectors);
+        postProcess(blocks, connectors);
+        consoleLog("Flow model solution updated.");
+    }
+    else
+        consoleLog("No active flow model.");
 }
 
 void MainWindow::on_actionNew_Block_triggered()
@@ -96,83 +157,27 @@ void MainWindow::on_actionNew_Block_triggered()
     if(dialog.exec() == QDialog::Accepted)
     {
         QString blockType = dialog.getSelectedBlock();
-        Block *block = nullptr;
-        QImage image(":/blocks/images/default.png");
-
-        //- Default node points
-        std::vector<QPointF> nodePts = {
-            QPointF(-10, 19),
-            QPointF(48, 19),
-            QPointF(20, -10)
-        };
-
-        if(blockType == "Fan")
-        {
-            block = new Fan();
-            image = QImage(":/blocks/images/fan.png");
-        }
-        else if(blockType == "Constant Flow Fan")
-        {
-            block = new ConstFlowFan();
-            image = QImage(":/blocks/images/const_flow_fan.png");
-        }
-        else if(blockType == "Pressure Reservoir")
-        {
-            block = new PressureReservoir();
-            image = QImage(":/blocks/images/pressure_reservoir.png");
-        }
-        else if(blockType == "Mass Flow Reservoir")
-        {
-            block = new MassFlowReservoir();
-            image = QImage(":/blocks/images/mass_flow_reservoir.png");
-        }
-        else if(blockType == "Restrictor Valve")
-        {
-            block = new RestrictorValve();
-            image = QImage(":/blocks/images/valve.png");
-        }
-        else if(blockType == "Diffuser")
-        {
-            block = new Diffuser();
-            image = QImage(":/blocks/images/diffuser.png");
-        }
-        else if(blockType == "Nozzle")
-        {
-            block = new Nozzle();
-            image = QImage(":/blocks/images/nozzle.png");
-        }
-        else if(blockType == "Y Connector")
-        {
-            block = new YConnector();
-            image = QImage(":/blocks/images/y_connector.png");
-            nodePts = {
-                QPointF(-10, 2.5),
-                QPointF(-10, 35),
-                QPointF(48, 20)
-            };
-        }
-        else
-            return;
-
-        ProcessModelScene *scene = (ProcessModelScene*)ui->graphicsView->scene();
-        if(scene)
-            scene->addBlock(block, image, nodePts, QPointF(0, 0));
+        addBlock(blockType.toStdString());
     }
 }
 
-void MainWindow::on_modelComboBox_currentIndexChanged(const QString &model)
+void MainWindow::on_modelComboBox_currentIndexChanged(const QString &flowModel)
 {
-    bool success = true;
-
-    if(model == "Simple Linear")
-        scene_->setNewModel(std::make_shared<SimpleLinearModel>(SimpleLinearModel()));
-    else if(model == "P&G")
-        scene_->setNewModel(std::make_shared<PGModel>(PGModel()));
-
-    if(success)
-        consoleLog("Flow model changed to \"" + model.toStdString() + "\".");
+    if(flowModel == "Incompressible" || flowModel == "IncompressibleFlowModel")
+        flowModel_ = std::shared_ptr<IncompressibleFlowModel>(new IncompressibleFlowModel());
+    else if(flowModel == "Incompressible (Procter and Gamble)" || flowModel == "PGFlowModel")
+        flowModel_ = std::shared_ptr<PGFlowModel>(new PGFlowModel());
     else
-        consoleError("Flow model could not be changed to \"" + model.toStdString() + "\".");
+    {
+        consoleError("Flow model \"" + flowModel.toStdString() + "\" is undefined.");
+        return;
+    }
+
+    flowModel_->initialize(scene_->getBlocks());
+    flowModel_->initialize(scene_->getConnectors());
+    scene_->setFlowModel(flowModel_);
+
+    consoleLog("Flow model changed to \"" + flowModel.toStdString() + "\".");
 }
 
 ProcessModelScene *MainWindow::getActiveProcessModel()
@@ -216,41 +221,38 @@ void MainWindow::consoleError(const std::string &message)
                 );
 }
 
-void MainWindow::postProcess(const std::vector<Block *> &blocks, const std::vector<Connector *> &connectors)
+void MainWindow::postProcess(const std::vector<std::shared_ptr<Block>> &blocks, const std::vector<std::shared_ptr<Connector>> &connectors)
 {
     QTableWidget& table = *(ui->nodeResultsTable);
-    const std::vector<Node*>& nodes = solver_->nodes();
-
     table.clearContents();
-    table.setRowCount(nodes.size());
+    table.setRowCount(flowModel_->nNodes());
 
-    for(int i = 0; i < nodes.size(); ++i)
-    {
-        const Node* node = nodes[i];
+    int i = 0;
+    for(const std::shared_ptr<Block>& block: blocks)
+        for(std::shared_ptr<Node>& node: block->nodes())
+        {
+            QTableWidgetItem *nodeId = new QTableWidgetItem(tr(std::to_string(i + 1).c_str()));
+            QTableWidgetItem *parentBlock = new QTableWidgetItem(tr(node->block().name.c_str()));
+            QTableWidgetItem *parentBlockType = new QTableWidgetItem(tr(node->block().type().c_str()));
+            QTableWidgetItem *nodeType = new QTableWidgetItem(tr((node->isInput() ? "Input" : node->isOutput() ? "Output" : "Sink")));
+            QTableWidgetItem *pressure = new QTableWidgetItem(tr(std::to_string(node->state()("p")).c_str()));
 
-        QTableWidgetItem *nodeId = new QTableWidgetItem(tr(std::to_string(i + 1).c_str()));
-        QTableWidgetItem *parentBlock = new QTableWidgetItem(tr(node->block().name.c_str()));
-        QTableWidgetItem *parentBlockType = new QTableWidgetItem(tr(node->block().type().c_str()));
-        QTableWidgetItem *nodeType = new QTableWidgetItem(tr((node->isInput() ? "Input" : node->isOutput() ? "Output" : "Sink")));
-        QTableWidgetItem *pressure = new QTableWidgetItem(tr(std::to_string(nodes[i]->getSolution("P")).c_str()));
-
-        int j = 0;
-        table.setItem(i, j++, nodeId);
-        table.setItem(i, j++, parentBlock);
-        table.setItem(i, j++, parentBlockType);
-        table.setItem(i, j++, nodeType);
-        table.setItem(i, j++, pressure);
-    }
+            int j = 0;
+            table.setItem(i, j++, nodeId);
+            table.setItem(i, j++, parentBlock);
+            table.setItem(i, j++, parentBlockType);
+            table.setItem(i, j++, nodeType);
+            table.setItem(i++, j++, pressure);
+        }
 
     ui->connectorResultsTable->setRowCount(connectors.size());
-
     for(uint i = 0; i < connectors.size(); ++i)
     {
         QTableWidgetItem *connectorId = new QTableWidgetItem(tr(std::to_string(i + 1).c_str()));
-        QTableWidgetItem *sourceNodeId = new QTableWidgetItem(tr(std::to_string(solver_->nodeId(connectors[i]->sourceNode()) + 1).c_str()));
-        QTableWidgetItem *destNodeId = new QTableWidgetItem(tr(std::to_string(solver_->nodeId(connectors[i]->destNode()) + 1).c_str()));
-        QTableWidgetItem *resistance = new QTableWidgetItem(tr(std::to_string(connectors[i]->getResistance()).c_str()));
-        QTableWidgetItem *flowRate = new QTableWidgetItem(tr(std::to_string(connectors[i]->getSolution("Q")).c_str()));
+        QTableWidgetItem *sourceNodeId = new QTableWidgetItem(tr(std::to_string(flowModel_->id(connectors[i]->sourceNode()) + 1).c_str()));
+        QTableWidgetItem *destNodeId = new QTableWidgetItem(tr(std::to_string(flowModel_->id(connectors[i]->destNode()) + 1).c_str()));
+        QTableWidgetItem *resistance = new QTableWidgetItem(tr(std::to_string(connectors[i]->resistance()).c_str()));
+        QTableWidgetItem *flowRate = new QTableWidgetItem(tr(std::to_string(connectors[i]->state()("Q")).c_str()));
 
         int j = 0;
         ui->connectorResultsTable->setItem(i, j++, connectorId);
@@ -261,11 +263,6 @@ void MainWindow::postProcess(const std::vector<Block *> &blocks, const std::vect
     }
 }
 
-void MainWindow::on_solverComboBox_currentIndexChanged(const QString &solver)
-{
-    setSolver(solver.toStdString());
-}
-
 void MainWindow::on_actionSave_triggered()
 {
     if(filename_.empty())
@@ -273,75 +270,88 @@ void MainWindow::on_actionSave_triggered()
     else
     {
         consoleLog("Saving case as \"" + filename_ + "\"...");
-        std::map<const Node*, uint> idMap;
+
+        std::unordered_map<Node*, uint> nodeIdMap;
 
         QFile file(QString(filename_.c_str()));
+
         file.open(QIODevice::WriteOnly | QIODevice::Text);
         QXmlStreamWriter xml(&file);
 
-        std::vector<Block*> blocks = scene_->getBlocks();
-        std::vector<Connector*> connectors = scene_->getConnectors();
+        std::vector<BlockGraphicsItem*> blocks = scene_->getGraphicsItems<BlockGraphicsItem>();
+        std::vector<ConnectorGraphicsPathItem*> connectors = scene_->getGraphicsItems<ConnectorGraphicsPathItem>();
 
         xml.setAutoFormatting(true);
         xml.writeStartDocument();
 
         //- Save the model type
         xml.writeStartElement("ProcessModel");
-        xml.writeTextElement("Model", scene_->model().type().c_str());
+        xml.writeTextElement("FlowModel", flowModel_->type().c_str());
 
         //- Write block info
-        xml.writeStartElement("Blocks");
-        xml.writeAttribute("count", QString::number(blocks.size()));
-
         uint nodeId = 0;
-        for(Block* block: blocks)
+        for(BlockGraphicsItem* block: blocks)
         {
-            xml.writeStartElement("Block");
-            xml.writeAttribute("name", block->name.c_str());
-            xml.writeAttribute("type", block->type().c_str());
+            xml.writeStartElement("block");
+            xml.writeAttribute("name", block->block()->name.c_str());
+            xml.writeAttribute("type", block->block()->type().c_str());
+            xml.writeTextElement("x", QString::number(block->pos().x()));
+            xml.writeTextElement("y", QString::number(block->pos().y()));
+            xml.writeTextElement("transform", block->transform().isScaling() ? "true": "false");
 
-            xml.writeStartElement("Nodes");
-            for(const auto& node: block->nodes())
+            for(const auto& node: block->block()->nodes())
             {
-                xml.writeStartElement("Node");
+                xml.writeStartElement("node");
                 xml.writeAttribute("type", node->type().c_str());
-                idMap[node.get()] = nodeId;
+                nodeIdMap[node.get()] = nodeId;
                 xml.writeAttribute("id", QString::number(nodeId++));
                 xml.writeEndElement();
             }
-            xml.writeEndElement(); // End nodes
+
+            for(const auto& entry: block->block()->properties())
+            {
+                xml.writeStartElement("property");
+                xml.writeAttribute("name", entry.first.c_str());
+                xml.writeTextElement("value", QString::number(entry.second));
+                xml.writeEndElement();
+            }
+
+            for(const auto& entry: block->block()->properties())
+            {
+                xml.writeStartElement("solution");
+                xml.writeAttribute("name", entry.first.c_str());
+                xml.writeTextElement("value", QString::number(entry.second));
+                xml.writeEndElement();
+            }
+
             xml.writeEndElement(); // End block
         }
 
-        xml.writeEndElement(); // End blocks
-
         //- Wite connector info
-        xml.writeStartElement("Connectors");
-        xml.writeAttribute("count", QString::number(connectors.size()));
-        for(Connector* connector: connectors)
+        for(ConnectorGraphicsPathItem* connector: connectors)
         {
-            xml.writeStartElement("Connector");
-            xml.writeTextElement("SourceNode", QString::number(idMap[connector->sourceNode()]));
-            xml.writeTextElement("DestNode", QString::number(idMap[connector->destNode()]));
+            xml.writeStartElement("connector");
+            xml.writeTextElement("source", QString::number(nodeIdMap[connector->connector()->sourceNode().get()]));
+            xml.writeTextElement("dest", QString::number(nodeIdMap[connector->connector()->destNode().get()]));
 
-            xml.writeStartElement("Properties");
-            for(const auto& entry: connector->properties())
+            for(const auto& entry: connector->connector()->properties())
             {
-                const Property& p = entry.second;
-                xml.writeTextElement(p.symbol.c_str(), QString::number(p.value));
+                xml.writeStartElement("property");
+                xml.writeAttribute("name", entry.first.c_str());
+                xml.writeTextElement("value", QString::number(entry.second));
+                xml.writeEndElement();
             }
-            xml.writeEndElement();
 
-            xml.writeStartElement("Solution");
-            for(const auto& entry: connector->solution())
+            for(const auto& entry: connector->connector()->solution())
             {
-                const Solution& s = entry.second;
-                xml.writeTextElement(s.symbol.c_str(), QString::number(s.value));
+                xml.writeStartElement("solution");
+                xml.writeAttribute("name", entry.first.c_str());
+                xml.writeTextElement("value", QString::number(entry.second));
+                xml.writeEndElement();
             }
-            xml.writeEndElement();
+
             xml.writeEndElement();
         }
-        xml.writeEndElement();
 
         xml.writeEndElement();
         xml.writeEndDocument();
@@ -366,6 +376,116 @@ void MainWindow::on_actionOpen_triggered()
 
     if(!filename.empty())
     {
-        consoleLog("Loading file \"" + filename + "\"...");
+        QFile file(QString(filename.c_str()));
+
+        file.open(QIODevice::ReadOnly | QIODevice::Text);
+        QXmlStreamReader xml(&file);
+
+        scene_->clear();
+        std::unordered_map<int, std::shared_ptr<NodeGraphicsItem>> nodes;
+
+        while(xml.readNextStartElement())
+        {
+            qDebug() << xml.name();
+
+            if(xml.name() == "FlowModel")
+                on_modelComboBox_currentIndexChanged(xml.readElementText());
+            else if(xml.name() == "block")
+            {
+                std::string name = xml.attributes().value("name").toString().toStdString();
+                std::string type = xml.attributes().value("type").toString().toStdString();
+
+                QPointF pos(0., 0.);
+                std::map<std::string, double> properties, solution;
+                std::vector<int> nodeId;
+                bool flip = false;
+
+                while(xml.readNextStartElement())
+                {
+                    if(xml.name() == "x")
+                        pos.setX(xml.readElementText().toDouble());
+                    else if(xml.name() == "y")
+                        pos.setY(xml.readElementText().toDouble());
+                    else if(xml.name() == "transform")
+                    {
+                        if(xml.readElementText() == "true")
+                            flip = true;
+                    }
+                    else if(xml.name() == "node")
+                    {
+                        nodeId.push_back(xml.attributes().value("id").toInt());
+                        xml.skipCurrentElement();
+                    }
+                    else if(xml.name() == "property")
+                    {
+                        std::string name = xml.attributes().value("name").toString().toStdString();
+
+                        while(xml.readNextStartElement())
+                            properties[name] = xml.readElementText().toDouble();
+                    }
+                    else if(xml.name() == "solution")
+                    {
+                        std::string name = xml.attributes().value("name").toString().toStdString();
+
+                        while(xml.readNextStartElement())
+                            solution[name] = xml.readElementText().toDouble();
+                    }
+                }
+
+                BlockGraphicsItem* block = addBlock(type, pos);
+
+                if(flip)
+                    block->flipHorizontal();
+
+                block->setName(name);
+                block->block()->setProperties(properties);
+
+                int i = 0;
+                for(std::shared_ptr<NodeGraphicsItem>& node: block->nodes())
+                    nodes[nodeId[i++]] = node;
+            }
+            else if(xml.name() == "connector")
+            {
+                int source, dest;
+                std::map<std::string, double> properties, solution;
+
+                while(xml.readNextStartElement())
+                {
+                    if(xml.name() == "source")
+                        source = xml.readElementText().toInt();
+                    else if(xml.name() == "dest")
+                        dest = xml.readElementText().toInt();
+                    else if(xml.name() == "property")
+                    {
+                        std::string name = xml.attributes().value("name").toString().toStdString();
+
+                        while(xml.readNextStartElement())
+                            properties[name] = xml.readElementText().toDouble();
+                    }
+                    else if(xml.name() == "solution")
+                    {
+                        std::string name = xml.attributes().value("name").toString().toStdString();
+
+                        while(xml.readNextStartElement())
+                            solution[name] = xml.readElementText().toDouble();
+                    }
+                }
+
+                ConnectorGraphicsPathItem* connector = scene_->connect(nodes[source], nodes[dest]);
+                connector->connector()->setProperties(properties);
+            }
+        }
+
+        file.close();
+    }
+}
+
+void MainWindow::on_actionFlow_model_triggered()
+{
+    FanOptimizerDialog dialog(scene_->getBlocks());
+
+    if(dialog.exec() == QDialog::Accepted)
+    {
+
     }
 }

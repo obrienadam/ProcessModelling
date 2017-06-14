@@ -5,19 +5,36 @@ MassFlowReservoir::MassFlowReservoir()
     :
       Block(0, 0, 1, "Const Flow")
 {
-    addProperty(Property("Q", "Flow rate", 0, -10000, 10000, Unit("m^3/s")));
+
+}
+
+void MassFlowReservoir::setProperties(const std::map<std::string, double> &properties)
+{
+    Q_ = properties.find("Flow rate")->second;
+}
+
+std::map<std::string, double> MassFlowReservoir::properties() const
+{
+    return {
+        {"Flow rate", Q_}
+    };
+}
+
+std::map<std::string, double> MassFlowReservoir::solution() const
+{
+    return {};
 }
 
 void MassFlowReservoir::setNodeEquations()
 {
-    Node* node = nodes_.back().get();
+    std::shared_ptr<Node> node = nodes_.back();
 
-    double r = node->connector().getResistance();
+    double r = node->connector().resistance();
     Equation eqn;
 
     eqn.addCoeff(node, 1.);
     eqn.addCoeff(node->connector().destNode(), -1.);
-    eqn.setSource(r*properties_.find("Q")->second.value);
+    eqn.setSource(r*Q_);
 
     node->setEquation(eqn);
 }

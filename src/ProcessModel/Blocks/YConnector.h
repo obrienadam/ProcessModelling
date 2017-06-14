@@ -11,8 +11,21 @@ public:
     std::string type() const
     { return "Y Connector"; }
 
-    void setNodeEquations() override;
+    //- Properties
+    void setProperties(const std::map<std::string, double>& properties);
+
+    std::map<std::string, double> properties() const;
+
+    //- Solution
+    std::map<std::string, double> solution() const;
+
     void updateSolution() override;
+
+    void setNodeEquations() override;
+
+private:
+    double Kre_, Kloss_; //- properties
+    double vEntA_, vEntB_, vExit_; //- solution
 };
 
 #endif

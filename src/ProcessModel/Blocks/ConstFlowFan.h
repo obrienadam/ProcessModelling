@@ -12,7 +12,20 @@ public:
     { return "Constant Flow Fan"; }
 
     void setNodeEquations() override;
-    void updateSolution() override;
+
+    //- Properties
+    void setProperties(const std::map<std::string, double>& properties);
+
+    std::map<std::string, double> properties() const;
+
+    //- Solution
+    std::map<std::string, double> solution() const;
+
+    void updateSolution();
+
+private:
+    double Q_; //- Flow rate
+    double dP_; //- Pressure change
 };
 
 #endif // CONSTFLOWFAN_H

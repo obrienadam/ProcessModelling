@@ -8,7 +8,7 @@ Equation::Equation()
 
 }
 
-void Equation::addCoeff(Node *node, double coeff)
+void Equation::addCoeff(std::shared_ptr<Node>& node, double coeff)
 {
     coeffs_.push_back(std::make_pair(node, coeff));
 }

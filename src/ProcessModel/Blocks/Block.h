@@ -7,8 +7,6 @@
 #include <map>
 
 #include "processmodel_global.h"
-#include "Property.h"
-#include "Solution.h"
 
 class PROCESSMODELSHARED_EXPORT Block
 {
@@ -57,34 +55,17 @@ public:
     virtual std::string type() const = 0;
 
     //- Properties
-    void addProperty(const Property& property);
+    virtual void setProperties(const std::map<std::string, double>& properties) = 0;
 
-    void setProperties(const std::map<std::string, Property> &properties);
-
-    void setProperty(const std::string& name, double value);
-
-    double getProperty(const std::string& name) const;
+    virtual std::map<std::string, double> properties() const = 0;
 
     //- Solution
-    void addSolution(const Solution& solution);
-
-    void setSolution(const std::string& name, double value)
-    { solutions_.find(name)->second.value = value; }
-
-    double getSolution(const std::string& name) const
-    { return solutions_.find(name)->second.value; }
+    virtual std::map<std::string, double> solution() const = 0;
 
     virtual void updateSolution() {}
 
     //- Equations
     virtual void setNodeEquations();
-
-    //- Properties
-    std::map<std::string, Property>& properties()
-    { return properties_; }
-
-    std::map<std::string, Solution>& solution()
-    { return solutions_; }
 
     std::string name;
 
@@ -98,10 +79,6 @@ protected:
     std::vector<std::shared_ptr<Node>> nodes_;
 
     //- Properties
-    std::map<std::string, Property> properties_;
-
-    std::map<std::string, Solution> solutions_;
-
     std::map<std::string, std::vector<std::string>> options_;
 };
 

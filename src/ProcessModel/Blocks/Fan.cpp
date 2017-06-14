@@ -5,18 +5,35 @@ Fan::Fan()
     :
       Block(1, 1, 0, "Fan")
 {
-    addProperty(Property("dP", "Pressure increase", 0.1, 0., 1e12, Unit("Pa")));
+
+}
+
+void Fan::setProperties(const std::map<std::string, double> &properties)
+{
+    dP_ = properties.find("Pressure increase")->second;
+}
+
+std::map<std::string, double> Fan::properties() const
+{
+    return {
+        {"Pressure increase", dP_}
+    };
+}
+
+std::map<std::string, double> Fan::solution() const
+{
+    return {};
 }
 
 void Fan::setNodeEquations()
 {
-    Node* output = outputs_.back().get();
-    Node* input = inputs_.back().get();
+    std::shared_ptr<Node> output = outputs_.back();
+    std::shared_ptr<Node> input = inputs_.back();
 
     Equation inputEqn;
 
-    double r1 = input->connector().getResistance();
-    double r2 = output->connector().getResistance();
+    double r1 = input->connector().resistance();
+    double r2 = output->connector().resistance();
 
     inputEqn.addCoeff(input->connector().sourceNode(), r2);
     inputEqn.addCoeff(input, -r2);
@@ -27,7 +44,7 @@ void Fan::setNodeEquations()
     Equation outputEqn;
     outputEqn.addCoeff(output, 1.);
     outputEqn.addCoeff(input, -1.);
-    outputEqn.setSource(properties().find("dP")->second.value);
+    outputEqn.setSource(dP_);
 
     input->setEquation(inputEqn);
     output->setEquation(outputEqn);

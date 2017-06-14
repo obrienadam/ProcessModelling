@@ -3,9 +3,8 @@
 
 #include <map>
 
-#include "Property.h"
-#include "Solution.h"
 #include "Equation.h"
+#include "FlowModel.h"
 
 class Block;
 class Connector;
@@ -15,33 +14,56 @@ class Node
 public:
     enum Type{INPUT, OUTPUT, SINK};
 
-    Node(Type type, Block *block = nullptr, Connector *connector = nullptr);
+    Node(Type type, Block *block);
 
-    //- Block properties
-    bool isInput() const { return type_ == INPUT; }
-    bool isOutput() const { return type_ == OUTPUT; }
-    bool isSink() const { return type_ == SINK; }
+    //- Node type info
+    bool isInput() const
+    { return type_ == INPUT; }
+
+    bool isOutput() const
+    { return type_ == OUTPUT; }
+
+    bool isSink() const
+    { return type_ == SINK; }
+
     std::string type() const;
 
-    Block& block() { return *block_; }
-    const Block& block() const { return *block_; }
-    void removeBlock() { block_ = nullptr; }
+    //- Block info
+    Block& block()
+    { return *block_; }
 
-    //- Connector properties
-    Connector& connector() { return *connector_; }
-    void setConnector(Connector *connector) { connector_ = connector; }
-    void removeConnector() { connector_ = nullptr; }
+    const Block& block() const
+    { return *block_; }
 
-    //- Solution variables
-    void addSolution(const Solution& solution);
-    void setSolution(const std::string& name, double value) { solutions_.find(name)->second.value = value; }
-    double getSolution(const std::string& name) const { return solutions_.find(name)->second.value; }
+    void removeBlock()
+    { block_ = nullptr; }
 
-    const std::map<std::string, Solution>& solution() const { return solutions_; }
+    //- Connector info
+    Connector& connector()
+    { return *connector_; }
+
+    void setConnector(Connector *connector)
+    { connector_ = connector; }
+
+    void removeConnector()
+    { connector_ = nullptr; }
+
+    //- State info
+
+    void setState(const std::shared_ptr<FlowModel::NodeState>& state)
+    { state_ = state; }
+
+    FlowModel::NodeState& state()
+    { return *state_; }
+
+    const FlowModel::NodeState& state() const
+    { return *state_; }
 
     //- Misc
     void setEquation(const Equation& eqn) { eqn_ = eqn; }
+
     Equation& equation() { return eqn_; }
+
     const Equation& equation() const { return eqn_; }
 
 private:
@@ -50,10 +72,11 @@ private:
 
     //- Model info
     Block *block_;
-    Connector *connector_;
+    Connector *connector_ = nullptr;
 
-    //- Properties
-    std::map<std::string, Solution> solutions_;
+    //- State
+    std::shared_ptr<FlowModel::NodeState> state_;
+
     Equation eqn_;
 };
 #endif // NODE_H

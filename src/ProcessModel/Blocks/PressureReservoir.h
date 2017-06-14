@@ -12,7 +12,18 @@ public:
     std::string type() const
     { return "Pressure Reservoir"; }
 
+    //- Properties
+    void setProperties(const std::map<std::string, double>& properties);
+
+    std::map<std::string, double> properties() const;
+
+    //- Solution
+    std::map<std::string, double> solution() const;
+
     void setNodeEquations();
+
+private:
+    double p_; //- properties
 };
 
 #endif // PRESSURERESERVOIR_H

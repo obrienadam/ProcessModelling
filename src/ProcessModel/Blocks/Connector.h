@@ -7,6 +7,7 @@
 
 #include "processmodel_global.h"
 #include "Node.h"
+#include "FlowModel.h"
 
 class PROCESSMODELSHARED_EXPORT Connector
 {
@@ -16,41 +17,48 @@ public:
 
     //- Connecting
     bool isConnected() const { return sourceNode_ && destNode_; }
+
     bool canConnect(const Node& sourceNode, const Node& destNode) const;
-    bool connect(Node* sourceNode, Node* destNode);
+
+    bool connect(std::shared_ptr<Node> &sourceNode, std::shared_ptr<Node> &destNode);
+
     void disconnect();
 
     //- Access
-    Node* sourceNode() { return sourceNode_; }
-    Node* destNode() { return destNode_; }
-    Node* otherNode(const Node* node);
+    std::shared_ptr<Node>& sourceNode() { return sourceNode_; }
+
+    std::shared_ptr<Node>& destNode() { return destNode_; }
+
+    std::shared_ptr<Node>& otherNode(const std::shared_ptr<Node> &node);
+
+    //- State
+    void setState(const std::shared_ptr<FlowModel::ConnectorState>& state)
+    { state_ = state; }
+
+    FlowModel::ConnectorState& state()
+    { return *state_; }
+
+    const FlowModel::ConnectorState& state() const
+    { return *state_; }
+
+    double resistance() const
+    { return state_->resistance(); }
 
     //- Properties
-    void addProperty(const Property& property);
-    double getProperty(const std::string& symbol) const { return properties_.find(symbol)->second.value; }
+    void setProperties(const std::map<std::string, double>& properties)
+    { state_->setProperties(properties); }
 
-    void addSolution(const Solution& solution) { solutions_[solution.symbol] = solution; }
-    void setSolution(const std::string& name, double value) { solutions_.find(name)->second.value = value; }
-    double getSolution(const std::string& name) const { return solutions_.find(name)->second.value; }
+    std::map<std::string, double> properties() const
+    { return state_->properties(); }
 
-    void setResistanceFunction(std::function<double(const std::map<std::string, Property>&, const std::map<std::string, Solution>&)>& resistanceFunction)
-    {
-        resistance_ = resistanceFunction;
-    }
-
-    double getResistance() const { return resistance_(properties_, solutions_); }
-
-    //- Properties
-    std::map<std::string, Property>& properties() { return properties_; }
-    std::map<std::string, Solution>& solution() { return solutions_; }
+    //- Solution
+    std::map<std::string, double> solution() const
+    { return state_->solution(); }
 
 private:
-    Node *sourceNode_, *destNode_;
-    std::map<std::string, Property> properties_;
-    std::map<std::string, Solution> solutions_;
 
-    //- Resistance functional
-    std::function<double(const std::map<std::string, Property>&, const std::map<std::string, Solution>&)> resistance_;
+    std::shared_ptr<Node> sourceNode_, destNode_;
+    std::shared_ptr<FlowModel::ConnectorState> state_;
 };
 
 #endif // CONNECTOR_H

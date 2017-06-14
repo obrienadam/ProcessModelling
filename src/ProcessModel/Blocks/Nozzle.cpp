@@ -4,6 +4,20 @@ Nozzle::Nozzle()
     :
       Block(1, 1, 0, "Nozzle")
 {
-    addProperty(Property("Ain", "Inlet area", 1., 0., 100, Unit("m^2", 1.)));
-    addProperty(Property("Aout", "Outlet area", 1., 0., 100, Unit("m^2", 1.)));
+
+}
+
+void Nozzle::setProperties(const std::map<std::string, double> &properties)
+{
+
+}
+
+std::map<std::string, double> Nozzle::properties() const
+{
+    return {};
+}
+
+std::map<std::string, double> Nozzle::solution() const
+{
+    return {};
 }

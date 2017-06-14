@@ -16,25 +16,30 @@ public:
     enum {Type = UserType + 3};
 
     //- Constructors
-    NodeGraphicsItem(Node* node, BlockGraphicsItem* block);
+    NodeGraphicsItem(std::shared_ptr<Node>& node, BlockGraphicsItem *block);
 
     ~NodeGraphicsItem();
 
     //- Qt methods
-    int type() const override { return Type; }
+    int type() const override
+    { return Type; }
+
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
     //- Misc
-    void addConnection(ConnectorGraphicsPathItem* connector) { connector_ = connector; }
+    void addConnection(ConnectorGraphicsPathItem *connector) { connector_ = connector; }
     void removeConnection();
-    Node* node();
-    bool isConnected() const { return connector_ != nullptr; }
+    bool isConnected() const
+    { return connector_ != nullptr; }
+
+    std::shared_ptr<Node>& node()
+    { return node_; }
 
 private:
 
     //- Note: NodeGraphicsItem does not assume ownership over node_
-    Node* node_;
-    ConnectorGraphicsPathItem *connector_;
+    std::shared_ptr<Node> node_;
+    ConnectorGraphicsPathItem* connector_ = nullptr;
 };
 
 #endif // NODEGRAPHICSItem_H

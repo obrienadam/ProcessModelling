@@ -9,7 +9,7 @@
 #include "BlockGraphicsItem.h"
 #include "ConnectorGraphicsPathItem.h"
 
-NodeGraphicsItem::NodeGraphicsItem(Node *node, BlockGraphicsItem *block)
+NodeGraphicsItem::NodeGraphicsItem(std::shared_ptr<Node> &node, BlockGraphicsItem *block)
     :
       QGraphicsEllipseItem(0, 0, 10, 10, block),
       node_(node),
@@ -38,10 +38,5 @@ void NodeGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
 void NodeGraphicsItem::removeConnection()
 {
     connector_ = nullptr;
-}
-
-Node *NodeGraphicsItem::node()
-{
-    return node_;
 }
 

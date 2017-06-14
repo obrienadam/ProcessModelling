@@ -11,25 +11,37 @@ public:
 
     enum {Type = UserType + 2};
 
+    //- Constructors/destructors
     ConnectorGraphicsPathItem();
-    ConnectorGraphicsPathItem(NodeGraphicsItem* sourceNode, NodeGraphicsItem* destNode);
+
     ~ConnectorGraphicsPathItem();
 
-    int type() const override { return Type; }
+    int type() const override
+    { return Type; }
 
     void setSourceNode(NodeGraphicsItem *sourceNode);
+
     void setPathTo(const QPointF& pos);
+
     void resetPath();
 
     void update(const QRectF &rect = QRectF());
 
-    NodeGraphicsItem* sourceNode() { return sourceNode_; }
-    NodeGraphicsItem* destNode() { return destNode_; }
+    NodeGraphicsItem* sourceNode()
+    { return sourceNode_; }
 
-    bool isConnected() const { return connector_ != nullptr; }
+    NodeGraphicsItem* destNode()
+    { return destNode_; }
+
+    bool isConnected() const
+    { return connector_ != nullptr; }
+
     std::shared_ptr<Connector> connect(NodeGraphicsItem* destNode);
+
     void disconnect();
-    std::shared_ptr<Connector> connector(){ return connector_; }
+
+    std::shared_ptr<Connector>& connector()
+    { return connector_; }
 
 private:
     void computePath(const QPointF& start, const QPointF& end);

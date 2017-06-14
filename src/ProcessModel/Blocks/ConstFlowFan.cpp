@@ -5,40 +5,56 @@ ConstFlowFan::ConstFlowFan()
     :
       Block(1, 1, 0, "Const Flow Fan")
 {
-    addProperty(Property("Q", "Flow rate", 0.01, 0.01, 1e12, Unit("m^3/s", 1.)));
-    addSolution(Solution("dP", "Pressure increase", "Pa"));
+
 }
 
 void ConstFlowFan::setNodeEquations()
 {
-    Node* output = outputs_.back().get();
-    Node* input = inputs_.back().get();
-    double Q = properties().find("Q")->second.value;
+    std::shared_ptr<Node> output = outputs_.back();
+    std::shared_ptr<Node> input = inputs_.back();
 
     Equation inputEqn;
 
-    double r1 = input->connector().getResistance();
+    double r1 = input->connector().resistance();
 
     inputEqn.addCoeff(input->connector().sourceNode(), 1);
     inputEqn.addCoeff(input, -1);
-    inputEqn.setSource(r1*Q);
+    inputEqn.setSource(r1*Q_);
 
     Equation outputEqn;
 
-    double r2 = output->connector().getResistance();
+    double r2 = output->connector().resistance();
 
     outputEqn.addCoeff(output, 1);
     outputEqn.addCoeff(output->connector().destNode(), -1);
-    outputEqn.setSource(r2*Q);
+    outputEqn.setSource(r2*Q_);
 
     input->setEquation(inputEqn);
     output->setEquation(outputEqn);
 }
 
+void ConstFlowFan::setProperties(const std::map<std::string, double> &properties)
+{
+    Q_ = properties.find("Flow rate")->second;
+}
+
+std::map<std::string, double> ConstFlowFan::properties() const
+{
+    return {
+        {"Flow rate", Q_}
+    };
+}
+
+std::map<std::string, double> ConstFlowFan::solution() const
+{
+    return {
+        {"Pressure increase", dP_}
+    };
+}
+
 void ConstFlowFan::updateSolution()
 {
-    double pin = inputs().back()->getSolution("P");
-    double pout = outputs().back()->getSolution("P");
-    double Q = outputs().back()->connector().getSolution("Q");
-    setSolution("dP", pout - pin);
+    double pin = inputs().back()->state()("p");
+    double pout = outputs().back()->state()("p");
+    dP_ = pout - pin;
 }

@@ -4,15 +4,32 @@ PressureReservoir::PressureReservoir()
     :
       Block(0, 0, 1, "Const Pressure")
 {
-    addProperty(Property("P", "Pressure", 0, -100, 100, Unit("Pa")));
+
+}
+
+void PressureReservoir::setProperties(const std::map<std::string, double> &properties)
+{
+    p_ = properties.find("Pressure")->second;
+}
+
+std::map<std::string, double> PressureReservoir::properties() const
+{
+    return {
+        {"Pressure", p_}
+    };
+}
+
+std::map<std::string, double> PressureReservoir::solution() const
+{
+    return {};
 }
 
 void PressureReservoir::setNodeEquations()
 {
-    Node *node = sinks_.back().get();
+    std::shared_ptr<Node> node = sinks_.back();
     Equation eqn;
 
     eqn.addCoeff(node, 1.);
-    eqn.setSource(getProperty("P"));
+    eqn.setSource(p_);
     node->setEquation(eqn);
 }

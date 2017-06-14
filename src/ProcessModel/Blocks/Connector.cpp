@@ -22,7 +22,7 @@ bool Connector::canConnect(const Node &sourceNode, const Node &destNode) const
             && &sourceNode.block() != &destNode.block();
 }
 
-bool Connector::connect(Node* sourceNode, Node* destNode)
+bool Connector::connect(std::shared_ptr<Node>& sourceNode, std::shared_ptr<Node>& destNode)
 {
     if(!canConnect(*sourceNode, *destNode))
         return false;
@@ -47,17 +47,10 @@ void Connector::disconnect()
     }
 }
 
-Node *Connector::otherNode(const Node *node)
+std::shared_ptr<Node> &Connector::otherNode(const std::shared_ptr<Node> &node)
 {
     if(sourceNode_ == node)
         return destNode_;
     else if(destNode_ == node)
         return sourceNode_;
-    else
-        return nullptr;
-}
-
-void Connector::addProperty(const Property& property)
-{
-    properties_[property.symbol] = property;
 }

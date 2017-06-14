@@ -7,7 +7,9 @@
 #include "BlockGraphicsItem.h"
 #include "PropertyDialog.h"
 
-BlockGraphicsItem::BlockGraphicsItem(Block *block, const QImage &img, const std::vector<QPointF> &nodePts)
+BlockGraphicsItem::BlockGraphicsItem(std::shared_ptr<Block>& block,
+                                     const QImage &img,
+                                     const std::vector<QPointF> &nodePts)
     :
       QGraphicsPixmapItem(QPixmap::fromImage(img)),
       block_(block),
@@ -19,25 +21,15 @@ BlockGraphicsItem::BlockGraphicsItem(Block *block, const QImage &img, const std:
     int i = 0;
     for(auto& node: *block)
     {
-        nodes_.push_back(new NodeGraphicsItem(node.get(), this));
+        nodes_.push_back(std::shared_ptr<NodeGraphicsItem>(new NodeGraphicsItem(node, this)));
         nodes_.back()->setPos(nodePts[i++]);
     }
-}
-
-BlockGraphicsItem::BlockGraphicsItem(const QPointF &pos, Block *block, const QImage &img, const std::vector<QPointF>& nodePts)
-    :
-      BlockGraphicsItem(block, img, nodePts)
-{
-    setPos(pos);
 }
 
 BlockGraphicsItem::~BlockGraphicsItem()
 {
     if(scene())
         scene()->removeItem(this);
-
-    for(NodeGraphicsItem* node: nodes_)
-        delete node;
 }
 
 //- Rendering
@@ -48,8 +40,23 @@ void BlockGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem 
         block_->name = text_.toPlainText().toStdString();
         text_.document()->setModified(false);
     }
+
     setTextPosition();
     QGraphicsPixmapItem::paint(painter, option, widget);
+}
+
+void BlockGraphicsItem::setName(const std::string &name)
+{
+    block_->name = name;
+    setText();
+}
+
+void BlockGraphicsItem::flipHorizontal()
+{
+    if(transform().isScaling())
+        setTransform(QTransform::fromScale(1, 1));
+    else
+        setTransform(QTransform::fromScale(-1, 1));
 }
 
 void BlockGraphicsItem::setText()
@@ -70,10 +77,11 @@ void BlockGraphicsItem::setTextPosition()
 
 void BlockGraphicsItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-    PropertyDialog dialog(block_.get());
+    PropertyDialog dialog(block_->name + " Properties",
+                          "Block Type: " + block_->type(),
+                          block_->properties(),
+                          block_->solution());
 
     if(dialog.exec() == QDialog::Accepted)
-    {
-
-    }
+        block_->setProperties(dialog.properties());
 }

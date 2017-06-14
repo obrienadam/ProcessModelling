@@ -1,6 +1,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QKeyEvent>
 #include <QDebug>
+
 #include "ProcessModelScene.h"
 
 //- Private helper methods
@@ -10,24 +11,48 @@ ProcessModelScene::ProcessModelScene(QObject *parent)
 {
     setObjectName("Process Model Scene");
     tmpConnector_ = new ConnectorGraphicsPathItem();
-    model_ = std::make_shared<SimpleLinearModel>();
 }
 
 ProcessModelScene::~ProcessModelScene()
 {
-    delete tmpConnector_;
+    if(tmpConnector_)
+        delete tmpConnector_;
 }
 
-void ProcessModelScene::addBlock(Block *block, const QImage &img, const std::vector<QPointF>& nodePts, const QPointF &scenePos)
+BlockGraphicsItem* ProcessModelScene::addBlock(std::shared_ptr<Block> &block,
+                                               const QImage &img,
+                                               const std::vector<QPointF>& nodePts,
+                                               const QPointF &scenePos)
 {
-    BlockGraphicsItem *blockItem = new BlockGraphicsItem(block, img, nodePts);
+    BlockGraphicsItem* blockItem = new BlockGraphicsItem(block, img, nodePts);
     blockItem->setPos(scenePos);
-    addItem(blockItem);
+    addItem(blockItem); //- Add to scene
+
+    //- Make sure nodes have correct state
+    flowModel_->initialize(block);
+
+    return blockItem;
 }
 
-std::vector<Block *> ProcessModelScene::getBlocks()
+ConnectorGraphicsPathItem *ProcessModelScene::connect(std::shared_ptr<NodeGraphicsItem> &source, std::shared_ptr<NodeGraphicsItem> &dest)
 {
-    std::vector<Block*> blocks;
+    ConnectorGraphicsPathItem * connector = new ConnectorGraphicsPathItem();
+    connector->setSourceNode(source.get());
+
+    if(connector->connect(dest.get()))
+    {
+        addItem(connector);
+        flowModel_->initialize(connector->connector());
+        return connector;
+    }
+
+    delete connector;
+    return nullptr;
+}
+
+std::vector<std::shared_ptr<Block>> ProcessModelScene::getBlocks()
+{
+    std::vector<std::shared_ptr<Block>> blocks;
 
     for(QGraphicsItem* item: this->items())
     {
@@ -38,23 +63,17 @@ std::vector<Block *> ProcessModelScene::getBlocks()
     return blocks;
 }
 
-std::vector<Connector *> ProcessModelScene::getConnectors()
+std::vector<std::shared_ptr<Connector> > ProcessModelScene::getConnectors()
 {
-    std::vector<Connector*> connectors;
+    std::vector<std::shared_ptr<Connector>> connectors;
 
     for(QGraphicsItem* item: this->items())
     {
         if(item->type() == ConnectorGraphicsPathItem::Type)
-            connectors.push_back(qgraphicsitem_cast<ConnectorGraphicsPathItem*>(item)->connector().get());
+            connectors.push_back(qgraphicsitem_cast<ConnectorGraphicsPathItem*>(item)->connector());
     }
 
     return connectors;
-}
-
-void ProcessModelScene::setNewModel(const std::shared_ptr<Model> &model)
-{
-    model_ = model;
-    model_->initialize(getConnectors());
 }
 
 void ProcessModelScene::keyPressEvent(QKeyEvent *event)
@@ -78,7 +97,7 @@ void ProcessModelScene::keyPressEvent(QKeyEvent *event)
             switch(item->type())
             {
             case BlockGraphicsItem::Type:
-                item->setTransform(QTransform::fromScale(-1, 1));
+                static_cast<BlockGraphicsItem*>(item)->flipHorizontal();
                 break;
             }
 
@@ -89,7 +108,7 @@ void ProcessModelScene::keyPressEvent(QKeyEvent *event)
             switch(item->type())
             {
             case BlockGraphicsItem::Type:
-                item->setTransform(QTransform::fromScale(1, 1));
+                static_cast<BlockGraphicsItem*>(item)->flipHorizontal();
                 break;
             }
         break;
@@ -103,9 +122,9 @@ void ProcessModelScene::keyPressEvent(QKeyEvent *event)
 
 void ProcessModelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    NodeGraphicsItem* node = nodeAt(event->scenePos());
+    NodeGraphicsItem* node = getItem<NodeGraphicsItem>(event->scenePos());
 
-    if(node && !node->isConnected())
+    if(node && !node->isConnected()) //- Found a non-connected node at press point
     {
         tmpConnector_->setSourceNode(node);
         addItem(tmpConnector_);
@@ -127,11 +146,11 @@ void ProcessModelScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     if(tmpConnector_->scene())
     {
-        NodeGraphicsItem *node = nodeAt(event->scenePos());
+        NodeGraphicsItem *node = getItem<NodeGraphicsItem>(event->scenePos());
 
         if(node && tmpConnector_->connect(node))
         {
-            model_->initialize(tmpConnector_->connector().get());
+            flowModel_->initialize(tmpConnector_->connector());
             tmpConnector_ = new ConnectorGraphicsPathItem();
         }
         else
@@ -139,37 +158,4 @@ void ProcessModelScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     }
 
     QGraphicsScene::mouseReleaseEvent(event);
-}
-
-BlockGraphicsItem *ProcessModelScene::blockAt(const QPointF &scenePos)
-{
-    for(QGraphicsItem* item: items(scenePos))
-    {
-        if(item->type() == BlockGraphicsItem::Type)
-            return (BlockGraphicsItem*)item;
-    }
-
-    return nullptr;
-}
-
-ConnectorGraphicsPathItem *ProcessModelScene::connectorAt(const QPointF &scenePos)
-{
-    for(QGraphicsItem* item: items(scenePos))
-    {
-        if(item->type() == ConnectorGraphicsPathItem::Type)
-            return (ConnectorGraphicsPathItem*)item;
-    }
-
-    return nullptr;
-}
-
-NodeGraphicsItem *ProcessModelScene::nodeAt(const QPointF &scenePos)
-{
-    for(QGraphicsItem* item: items(scenePos))
-    {
-        if(item->type() == NodeGraphicsItem::Type)
-            return (NodeGraphicsItem*)item;
-    }
-
-    return nullptr;
 }

@@ -29,31 +29,6 @@ Block::~Block()
         node->removeBlock();
 }
 
-void Block::addProperty(const Property &property)
-{
-    properties_[property.symbol] = property;
-}
-
-void Block::setProperties(const std::map<std::string, Property> &properties)
-{
-    properties_ = properties;
-}
-
-void Block::setProperty(const std::string &name, double value)
-{
-    properties_.find(name)->second.value = value;
-}
-
-double Block::getProperty(const std::string &name) const
-{
-    return properties_.find(name)->second.value;
-}
-
-void Block::addSolution(const Solution &solution)
-{
-    solutions_[solution.symbol] = solution;
-}
-
 void Block::setNodeEquations()
 {
 

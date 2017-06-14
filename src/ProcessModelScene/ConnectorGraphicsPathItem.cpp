@@ -16,20 +16,6 @@ ConnectorGraphicsPathItem::ConnectorGraphicsPathItem()
     setFlags(ItemIsSelectable);
 }
 
-ConnectorGraphicsPathItem::ConnectorGraphicsPathItem(NodeGraphicsItem *sourceNode, NodeGraphicsItem *destNode)
-    :
-      ConnectorGraphicsPathItem()
-{
-    connector_ = std::make_shared<Connector>(Connector());
-    if(connector_->connect(sourceNode->node(), destNode->node()))
-    {
-        sourceNode_ = sourceNode;
-        destNode_ = destNode;
-    }
-    else
-        connector_ = nullptr;
-}
-
 ConnectorGraphicsPathItem::~ConnectorGraphicsPathItem()
 {
     if(scene())
@@ -74,7 +60,7 @@ std::shared_ptr<Connector> ConnectorGraphicsPathItem::connect(NodeGraphicsItem *
     if(!sourceNode_ || sourceNode_->isConnected() || destNode->isConnected())
         return nullptr;
 
-    connector_ = std::make_shared<Connector>(Connector());
+    connector_ = std::shared_ptr<Connector>(new Connector());
 
     if(connector_->connect(sourceNode_->node(),
                            destNode->node()))
@@ -119,10 +105,12 @@ void ConnectorGraphicsPathItem::computePath(const QPointF &start, const QPointF 
 
 void ConnectorGraphicsPathItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-    PropertyDialog dialog(connector_.get());
+    PropertyDialog dialog("Connector",
+                          "Connector Properties",
+                          connector_->properties(),
+                          connector_->solution(),
+                          nullptr);
 
     if(dialog.exec() == QDialog::Accepted)
-    {
-
-    }
+        connector_->setProperties(dialog.properties());
 }

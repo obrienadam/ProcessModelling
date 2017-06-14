@@ -1,0 +1,24 @@
+<RCC>
+    <qresource prefix="/blocks">
+        <file>images/fan.png</file>
+        <file>images/default.png</file>
+        <file>images/pressure_reservoir.png</file>
+        <file>images/t_connector.png</file>
+        <file>images/y_connector.png</file>
+        <file>images/diffuser.png</file>
+        <file>images/nozzle.png</file>
+        <file>images/valve.png</file>
+        <file>images/mass_flow_reservoir.png</file>
+        <file>images/const_flow_fan.png</file>
+        <file>images/logo.png</file>
+    </qresource>
+    <qresource prefix="/icons">
+        <file>icons/Edit Property-32.png</file>
+        <file>icons/Export-32.png</file>
+        <file>icons/Open Folder-32.png</file>
+        <file>icons/Save as-32.png</file>
+        <file>icons/Save-32.png</file>
+        <file>icons/Start-32.png</file>
+        <file>icons/Create New-32.png</file>
+    </qresource>
+</RCC>
